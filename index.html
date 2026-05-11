@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>偷拍黑色产业链创新综合治理体系构建 | 大创项目</title>
+    <style>
+        :root {
+            --sidebar-bg: #0f1923;
+            --sidebar-hover: #1a2d3f;
+            --sidebar-active: #1e3750;
+            --sidebar-text: #b0bec5;
+            --sidebar-text-active: #e8d5a3;
+            --accent: #c9a458;
+            --accent-light: #e8d5a3;
+            --accent-dark: #9b7a3a;
+            --content-bg: #f1f4f7;
+            --card-bg: #ffffff;
+            --text-primary: #1a1f2e;
+            --text-secondary: #5a6275;
+            --text-muted: #8891a5;
+            --border-light: #e8ecf1;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.07), 0 2px 6px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.10), 0 3px 10px rgba(0, 0, 0, 0.06);
+            --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.07);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --transition-fast: 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            --sidebar-width: 272px;
+            --header-height: 72px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+            background: var(--content-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ==================== SIDEBAR ==================== */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--sidebar-bg);
+            background-image:
+                radial-gradient(ellipse at 50% 0%, rgba(201, 164, 88, 0.06) 0%, transparent 70%),
+                radial-gradient(ellipse at 85% 30%, rgba(255, 255, 255, 0.015) 0%, transparent 50%),
+                radial-gradient(ellipse at 20% 80%, rgba(201, 164, 88, 0.04) 0%, transparent 60%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            transition: transform var(--transition-smooth), opacity var(--transition-smooth);
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 2px 0 24px rgba(0, 0, 0, 0.15);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 3px;
+        }
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .sidebar-logo {
+            padding: 28px 24px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+            flex-shrink: 0;
+        }
+
+        .sidebar-logo .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #fff;
+            margin-bottom: 14px;
+            box-shadow: 0 4px 14px rgba(201, 164, 88, 0.3);
+            font-weight: 700;
+        }
+
+        .sidebar-logo .logo-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #e8eaf0;
+            letter-spacing: 0.5px;
+            line-height: 1.4;
+        }
+        .sidebar-logo .logo-subtitle {
+            font-size: 11px;
+            color: #8899aa;
+            margin-top: 4px;
+            letter-spacing: 0.3px;
+            font-weight: 400;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 12px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .sidebar-nav .nav-section-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #556677;
+            padding: 16px 12px 6px;
+            font-weight: 600;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 11px 14px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            color: var(--sidebar-text);
+            font-size: 14px;
+            font-weight: 500;
+            transition: all var(--transition-fast);
+            text-decoration: none;
+            position: relative;
+            letter-spacing: 0.3px;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        .nav-item:hover {
+            background: var(--sidebar-hover);
+            color: #d5dde5;
+            transform: translateX(2px);
+        }
+
+        .nav-item.active {
+            background: var(--sidebar-active);
+            color: var(--sidebar-text-active);
+            font-weight: 600;
+            box-shadow: inset 3px 0 0 var(--accent);
+        }
+
+        .nav-item .nav-icon {
+            width: 20px;
+            text-align: center;
+            font-size: 15px;
+            flex-shrink: 0;
+            opacity: 0.8;
+            transition: opacity var(--transition-fast);
+        }
+        .nav-item.active .nav-icon {
+            opacity: 1;
+        }
+
+        .nav-item .nav-badge {
+            margin-left: auto;
+            font-size: 10px;
+            background: rgba(201, 164, 88, 0.2);
+            color: var(--accent-light);
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-weight: 500;
+            letter-spacing: 0.4px;
+            transition: all var(--transition-fast);
+        }
+        .nav-item.active .nav-badge {
+            background: var(--accent);
+            color: #1a1f2e;
+        }
+
+        .sidebar-footer {
+            padding: 16px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 11px;
+            color: #556677;
+            flex-shrink: 0;
+            letter-spacing: 0.3px;
+            text-align: center;
+        }
+
+        /* ==================== MAIN CONTENT ==================== */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left var(--transition-smooth);
+        }
+
+        .search-section {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-light);
+            padding: 16px 28px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .search-engine-tabs {
+            display: flex;
+            gap: 3px;
+            background: #eef1f5;
+            border-radius: 28px;
+            padding: 3px;
+            flex-shrink: 0;
+        }
+
+        .search-engine-tab {
+            padding: 8px 17px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: #6b7588;
+            border: none;
+            background: transparent;
+            transition: all var(--transition-fast);
+            white-space: nowrap;
+            letter-spacing: 0.3px;
+            user-select: none;
+        }
+
+        .search-engine-tab:hover {
+            color: #3a4255;
+            background: rgba(255, 255, 255, 0.5);
+        }
+        .search-engine-tab.active {
+            background: #fff;
+            color: var(--accent-dark);
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .search-input-wrapper {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            width: 100%;
+            height: 44px;
+            padding: 0 48px 0 18px;
+            border: 2px solid #e2e7ee;
+            border-radius: 25px;
+            font-size: 14px;
+            color: var(--text-primary);
+            background: #fff;
+            transition: all var(--transition-fast);
+            outline: none;
+            letter-spacing: 0.3px;
+        }
+        .search-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(201, 164, 88, 0.08);
+        }
+        .search-input::placeholder {
+            color: #b0b9c5;
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+            color: #fff;
+            font-size: 16px;
+            box-shadow: 0 2px 8px rgba(201, 164, 88, 0.3);
+        }
+        .search-btn:hover {
+            background: var(--accent-dark);
+            box-shadow: 0 4px 14px rgba(201, 164, 88, 0.4);
+            transform: translateY(-50%) scale(1.04);
+        }
+
+        /* ==================== CONTENT AREA ==================== */
+        .content-area {
+            padding: 32px 28px 60px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .section-block {
+            scroll-margin-top: 100px;
+        }
+
+        .section-header {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-header .section-indicator {
+            width: 4px;
+            height: 32px;
+            background: var(--accent);
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .section-header h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: 0.4px;
+            line-height: 1.3;
+        }
+        .section-header .section-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 400;
+            margin-top: 2px;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 16px;
+        }
+
+        @media (min-width: 1400px) {
+            .cards-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* ==================== CARD COMPONENT ==================== */
+        .card {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 20px 22px;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            border: 1px solid transparent;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+            align-self: start; /* 防止同行卡片高度跟随变化 */
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(201, 164, 88, 0.03) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity var(--transition-smooth);
+            pointer-events: none;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(201, 164, 88, 0.25);
+            z-index: 2;
+        }
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            background: #f7f9fb;
+            color: var(--accent-dark);
+            transition: all var(--transition-bounce);
+            position: relative;
+            z-index: 1;
+        }
+        .card:hover .card-icon {
+            transform: scale(1.08);
+            background: linear-gradient(135deg, rgba(201, 164, 88, 0.12) 0%, rgba(201, 164, 88, 0.04) 100%);
+            color: #8b6914;
+            box-shadow: 0 0 0 8px rgba(201, 164, 88, 0.06);
+        }
+
+        .card-body {
+            flex: 1;
+            min-width: 0;
+            position: relative;
+            z-index: 1;
+        }
+        .card-body .card-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+            letter-spacing: 0.3px;
+            line-height: 1.4;
+            transition: color var(--transition-fast);
+        }
+        .card:hover .card-body .card-title {
+            color: #8b6914;
+        }
+
+        .card-body .card-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.55;
+            letter-spacing: 0.2px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            transition: all 0.35s ease;
+            max-height: calc(13px * 1.55 * 2); /* 两行高度，配合line-clamp */
+        }
+
+        /* 悬停时展开完整描述 */
+        .card:hover .card-body .card-desc {
+            -webkit-line-clamp: unset;
+            max-height: 500px; /* 足够容纳所有文本 */
+            overflow: visible;
+        }
+
+        .card-arrow {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 13px;
+            color: #c0c8d4;
+            transition: all var(--transition-smooth);
+            opacity: 0;
+            transform: translateX(-6px);
+            z-index: 1;
+        }
+        .card:hover .card-arrow {
+            opacity: 1;
+            transform: translateX(0);
+            color: var(--accent);
+        }
+
+        /* ==================== MOBILE MENU ==================== */
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 14px;
+            left: 14px;
+            z-index: 200;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #fff;
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 5px;
+            transition: all var(--transition-fast);
+        }
+        .mobile-menu-btn:hover {
+            box-shadow: var(--shadow-lg);
+        }
+        .mobile-menu-btn .bar {
+            width: 20px;
+            height: 2px;
+            background: #3a4455;
+            border-radius: 2px;
+            transition: all var(--transition-smooth);
+        }
+        .mobile-menu-btn.open .bar:nth-child(1) {
+            transform: rotate(45deg) translate(2.5px, 2.5px);
+        }
+        .mobile-menu-btn.open .bar:nth-child(2) {
+            opacity: 0;
+        }
+        .mobile-menu-btn.open .bar:nth-child(3) {
+            transform: rotate(-45deg) translate(2.5px, -2.5px);
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 99;
+            transition: opacity var(--transition-smooth);
+            cursor: pointer;
+        }
+        .sidebar-overlay.visible {
+            display: block;
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 1024px) {
+            .cards-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 12px;
+            }
+            .content-area {
+                padding: 24px 18px 48px;
+                gap: 30px;
+            }
+            .search-section {
+                padding: 12px 16px;
+                gap: 8px;
+            }
+            .section-header h2 {
+                font-size: 19px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+                box-shadow: 4px 0 32px rgba(0, 0, 0, 0.3);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .content-area {
+                padding: 18px 12px 40px;
+                gap: 24px;
+            }
+
+            .search-section {
+                padding: 10px 12px;
+                gap: 8px;
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-engine-tabs {
+                align-self: flex-start;
+            }
+            .search-input-wrapper {
+                min-width: 100%;
+            }
+            .search-input {
+                height: 40px;
+                font-size: 13px;
+            }
+            .search-btn {
+                width: 32px;
+                height: 32px;
+                right: 3px;
+            }
+
+            .card {
+                padding: 16px 18px;
+                gap: 12px;
+            }
+            .card-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+                border-radius: 10px;
+            }
+            .card-body .card-title {
+                font-size: 14px;
+            }
+            .card-body .card-desc {
+                font-size: 12px;
+                max-height: calc(12px * 1.55 * 2);
+            }
+            .card:hover .card-body .card-desc {
+                max-height: 400px;
+            }
+            .card-arrow {
+                top: 16px;
+                right: 14px;
+                font-size: 11px;
+            }
+
+            .section-header h2 {
+                font-size: 17px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 75vw;
+                max-width: 300px;
+            }
+            .search-engine-tabs {
+                gap: 1px;
+                padding: 2px;
+                border-radius: 22px;
+            }
+            .search-engine-tab {
+                padding: 5px 10px;
+                font-size: 10px;
+            }
+            .content-area {
+                padding: 14px 8px 32px;
+                gap: 20px;
+            }
+            .card {
+                padding: 14px 15px;
+                gap: 10px;
+                border-radius: var(--radius-md);
+            }
+            .card-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+                border-radius: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 汉堡菜单按钮 -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="菜单">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+    </button>
+
+    <!-- 侧边栏遮罩 -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- 侧边栏 -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-icon">⚖</div>
+            <div class="logo-title">偷拍黑色产业链<br>创新综合治理</div>
+            <div class="logo-subtitle">大创项目 · S202510520057</div>
+        </div>
+        <nav class="sidebar-nav">
+            <span class="nav-section-label">项目导航</span>
+            <a class="nav-item active" data-target="section-intro">
+                <span class="nav-icon">📋</span> 项目简介
+                <span class="nav-badge">概览</span>
+            </a>
+            <a class="nav-item" data-target="section-achievements">
+                <span class="nav-icon">🏆</span> 项目成果
+                <span class="nav-badge">4项</span>
+            </a>
+            <a class="nav-item" data-target="section-logs">
+                <span class="nav-icon">📝</span> 项目日志
+                <span class="nav-badge">4篇</span>
+            </a>
+            <a class="nav-item" data-target="section-team">
+                <span class="nav-icon">👥</span> 团队成员
+                <span class="nav-badge">5人</span>
+            </a>
+            <a class="nav-item" data-target="section-contact">
+                <span class="nav-icon">📧</span> 联系我们
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            中南财经政法大学 · 刑事司法学院<br>2024.9 – 2026.5
+        </div>
+    </aside>
+
+    <!-- 主内容区 -->
+    <main class="main-content" id="mainContent">
+        <!-- 搜索栏 -->
+        <div class="search-section">
+            <div class="search-engine-tabs" id="engineTabs">
+                <button class="search-engine-tab active" data-engine="baidu">🔍 百度</button>
+                <button class="search-engine-tab" data-engine="google">🌐 谷歌</button>
+                <button class="search-engine-tab" data-engine="bing">🔎 必应</button>
+            </div>
+            <div class="search-input-wrapper">
+                <input type="text" class="search-input" id="searchInput" placeholder="搜索偷拍治理、隐私权保护、犯罪场理论..." autocomplete="off">
+                <button class="search-btn" id="searchBtn" title="搜索">→</button>
+            </div>
+        </div>
+
+        <!-- 内容区块 -->
+        <div class="content-area" id="contentArea">
+            <!-- 项目简介 -->
+            <div class="section-block" id="section-intro">
+                <div class="section-header">
+                    <div class="section-indicator"></div>
+                    <div>
+                        <h2>项目简介</h2>
+                        <div class="section-subtitle">犯罪场视阈下"偷拍"黑色产业链的创新综合治理体系构建</div>
+                    </div>
+                </div>
+                <div class="cards-grid">
+       <div class="card" style="cursor: default;">
+    <div class="card-icon">📖</div>
+    <div class="card-body">
+        <div class="card-title">项目概况</div>
+        <div class="card-desc">本项目以犯罪场理论为核心分析工具本项目以犯罪场理论为核心分析工具，融合多元共治理论与情景预防理论，系统解构"偷拍"黑色产业链的五大环节——生产商、销售端、实行者、场所、资源销售端，构建全链条闭环式综合治理体系。</div>
+    </div>
+    <!-- 移除箭头或保留均可，如果不想要可删除 <span> -->
+</div>
+                    <a class="card" href="项目背景与研究意义.pdf" target="_blank">
+                        <div class="card-icon">🔬</div>
+                        <div class="card-body">
+                            <div class="card-title">研究背景与意义</div>
+                            <div class="card-desc">2024年前三季度全国法院受理非法生产销售窃听窃照专用器材案件同比增长436.36%。偷拍行为已从个体违法演变为完整黑色产业链，严重侵犯公民隐私权与人格尊严，治理迫在眉睫（点击查看更多）。</div>
+                        </div>
+                        <span class="card-arrow">↗</span>
+                    </a>
+                   <div class="card" style="cursor: default;">
+    <div class="card-icon">📖</div>
+    <div class="card-body">
+                            <div class="card-title">三大创新特色</div>
+                            <div class="card-desc">理论创新：提出"综合犯罪场"理论，将被害人从客体提升为互动主体；方法创新：多源数据三角互证；实践创新：构建五环节闭环式综合治理体系，实现从末端惩戒到源头预防的范式跃迁。</div>
+                        </div>
+                        <span class="card-arrow">↗</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 项目成果 -->
+            <div class="section-block" id="section-achievements">
+                <div class="section-header">
+                    <div class="section-indicator"></div>
+                    <div>
+                        <h2>项目成果</h2>
+                        <div class="section-subtitle">学术论文 · 调查报告 · 访谈实录 · 词云分析</div>
+                    </div>
+                </div>
+                <div class="cards-grid">
+                    <a class="card" href="学术论文.pdf" target="_blank">
+                        <div class="card-icon">📄</div>
+                        <div class="card-body">
+                            <div class="card-title">学术论文</div>
+                            <div class="card-desc">《犯罪场视阈下"偷拍"黑色产业链的创新综合治理体系构建》——基于犯罪场理论与多元共治理论，系统论证五环节治理体系，全文约3万字，已撰写完成。</div>
+                        </div>
+                        <span class="card-arrow">↗</span>
+                    </a>
+                    <a class="card" href="调查报告.pdf" target="_blank">
+                        <div class="card-icon">📊</div>
+                        <div class="card-body">
+                            <div class="card-title">调查报告</div>
+                            <div class="card-desc">回收126份有效问卷，覆盖多年龄层与职业群体。92.37%受访者听说过旅馆偷拍事件，79.66%认为隐私侵犯"非常严重"。卡方检验表明偷拍影响具有广泛社会性。</div>
+                        </div>
+                        <span class="card-arrow">↗</span>
+                    </a>
+                    <a class="card" href="访谈实录.pdf" target="_blank">
+                        <div class="card-icon">🎙</div>
+                        <div class="card-body">
+                            <div class="card-title">访谈实录</div>
+                            <div class="card-desc">完成对武汉硚口公安局基层民警及西安酒店从业者的深度访谈，揭示设备隐蔽性、证据易销毁、跨部门协作障碍、酒店巡检缺失等核心执法与行业痛点。</div>
+                        </div>
+                        <span class="card-arrow">↗</span>
+                    </a>
+                    <a class="card" href="词云图.pdf" target="_blank">
+                        <div class="card-icon">☁</div>
+                        <div class="card-body">
+                            <div class="card-title">词云图分析报告</div>
+                            <div class="card-desc">基于微博、知乎、腾讯新闻等平台数据，运用Python生成关键词词云图。"隐私权""维权""法律漏洞""酒店"等高频词汇凸显公众核心关切与治理期待。</div>
+                        </div>
+                        <span class="card-arrow">↗</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 项目日志 -->
+            <div class="section-block" id="section-logs">
+                <div class="section-header">
+                    <div class="section-indicator"></div>
+                    <div>
+                        <h2>项目日志</h2>
+                        <div class="section-subtitle">记录团队研究历程与关键节点</div>
+                    </div>
+                </div>
+                <div class="cards-grid">
+                    <a class="card" href="工作日志一.pdf" target="_blank">
+                        <div class="card-icon">📅</div>
+                        <div class="card-body">
+                            <div class="card-title">工作日志一：问卷与访谈提纲设计</div>
+                            <div class="card-desc">2024年10月15日，于中南财经政法大学南湖校区完成调研工具开发。设计13题核心问卷，制定针对基层民警与酒店从业者的半结构化访谈提纲，规划线上观察与词云分析方案。</div>
+                        </div>
+                        <span class="card-arrow">↗</span>
+                    </a>
+                    <a class="card" href="工作日志二.pdf"target="_blank">
+                        <div class="card-icon">🏨</div>
+                        <div class="card-body">
+                            <div class="card-title">工作日志二：实地调研与深度访谈</div>
+                            <div class="card-desc">2025年3月21日，赴武汉市洪山区某中档连锁酒店实地调研。与酒店当值主管进行45分钟深度访谈，现场勘查客房安防配置，收集酒店方对治理建议的真实反馈。</div>
+                        </div>
+                        <span class="card-arrow">↗</span>
+                    </a>
+                    <a class="card" href="工作日志三.pdf"target="_blank">
+                        <div class="card-icon">📋</div>
+                        <div class="card-body">
+                            <div class="card-title">工作日志三：中期总结与理论深化</div>
+                            <div class="card-desc">2025年6月15日，完成文献系统梳理与问卷初稿设计。构建"犯罪场—多元共治"双重分析框架，确定线上线下结合的调研策略，通过导师联系公安机关及行业协会获取支持。</div>
+                        </div>
+                        <span class="card-arrow">↗</span>
+                    </a>
+                    <a class="card" href="工作日志四.pdf" target="_blank">
+                        <div class="card-icon">📝</div>
+                        <div class="card-body">
+                            <div class="card-title">工作日志四：问卷与采访正式实施</div>
+                            <div class="card-desc">2025年7月16日，于武汉、福建、广东三地同步推进。收集200+有效问卷，完成近10次隐性访谈，获取典型事例20余个。运用SPSS进行描述性统计与交叉分析，提炼核心概念。</div>
+                        </div>
+                        <span class="card-arrow">↗</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 团队成员 -->
+            <div class="section-block" id="section-team">
+                <div class="section-header">
+                    <div class="section-indicator"></div>
+                    <div>
+                        <h2>团队成员</h2>
+                        <div class="section-subtitle">跨学科协作 · 刑事司法学院 & 法学院 & 哲学院</div>
+                    </div>
+                </div>
+                <div class="cards-grid">
+                    <a class="card" href="https://www.baidu.com/s?wd=陈泽和+中南财经政法大学+刑事司法学院+侦查学" target="_blank">
+                        <div class="card-icon">👤</div>
+                        <div class="card-body">
+                            <div class="card-title">陈泽和（项目负责人）</div>
+                            <div class="card-desc">2023级刑事司法学院本科生，校一等奖学金获得者，曾获校级优秀学生干部奖项。具有丰富的社会实践经历，曾在泉州市安溪县人民法院、应城市公安局实习，了解法律文书撰写、诉讼流程、案件办理流程，具有较为丰富的法学素养。有丰富的学术竞赛经历，具备丰富的文献搜集分析能力与文本撰写能力。现任刑事司法学院学生会文艺部部长，具有较强的组织与领导能力。此外在院新媒体、融媒体部门都有丰富的工作经历。</div>
+                        </div>
+                        <span class="card-arrow">↗</span>
+                    </a>
+                    <a class="card" href="https://www.baidu.com/s?wd=黄焜+中南财经政法大学+刑事司法学院+侦查学" target="_blank">
+                        <div class="card-icon">👤</div>
+                        <div class="card-body">
+                            <div class="card-title">黄焜</div>
+                            <div class="card-desc">2023级刑事司法学院本科生，曾任刑事司法学院院团委组织部纪律监督办公室负责人，负责管理并维护组织部内部文档资料，具有优秀的数据收集能力和分析能力。在佛山市顺德区人民法院、应城市公安局实习，有丰富的社会实践经验。曾是第37届“博文杯”项目主持人，加权成绩名列前茅，获校奖学金一等奖、院优秀共青团员等奖项，具有较强的自主创新意识和法律素养。</div>
+                        </div>
+                        <span class="card-arrow">↗</span>
+                    </a>
+                    <a class="card" href="https://www.baidu.com/s?wd=邓元君+中南财经政法大学+刑事司法学院+侦查学" target="_blank">
+                        <div class="card-icon">👤</div>
+                        <div class="card-body">
+                            <div class="card-title">邓元君</div>
+                            <div class="card-desc">2023 级刑事司法学院本科生，共青团员，校辩论队成员，具有博文杯立项结项经历，院团委组织部青年培育办公室负责人，具有丰富文字写作经验，和查找分析文献经验，能够高效处理信息，具有组织和策划经验，多次参与大型活动记录报道，撰写团委考评材料，曾在福州市晋安区人民法院、应城市公安局实习，了解法律文书撰写、刑事诉讼流程、案件办理流程。曾获院优秀共青团员，刑事司法学院“砺剑杯”辩论赛亚军，论辩荆楚湖北省辩论公开赛季军等奖项。</div>
+                        </div>
+                        <span class="card-arrow">↗</span>
+                    </a>
+                    <a class="card" href="https://www.baidu.com/s?wd=詹卓淇+中南财经政法大学+国际法学院+涉外法治" target="_blank">
+                        <div class="card-icon">👤</div>
+                        <div class="card-body">
+                            <div class="card-title">詹卓淇</div>
+                            <div class="card-desc">2023级国际法学院涉外法制专业本科生，校一等奖学金获得者，大一加权成绩位列专业前列。参与的第38届“博文杯”大学生百项实证创新基金项目所在小组成功立项，获得第二十届法学院新生杯辩论赛亚军，希贤杯系列之“思辩中南”校园主题辩论赛冠军，全国大学生英语大赛校级三等奖，“外研社·国才杯”笔试赛道二等奖，2023-2024年度五四表彰院级“优秀学生干部”，具有较好的思辨能力和优秀的法律素养，且具备一定的公文写作能力。现任思辩学园副队长，曾在法学院志愿者协会、南湖法学、青年研究中心均有工作经验。</div>
+                        </div>
+                        <span class="card-arrow">↗</span>
+                    </a>
+                    <a class="card" href="https://www.baidu.com/s?wd=胡一柯+中南财经政法大学+哲学院+PPE" target="_blank">
+                        <div class="card-icon">👤</div>
+                        <div class="card-body">
+                            <div class="card-title">胡一柯</div>
+                            <div class="card-desc">2023级哲学院本科生，有丰富的学术科研经历，曾获博文杯主持人校二等奖，全国电子商务创新创业创意大赛校二等奖，模拟政协主持人院优秀奖，并有中国国际大学生创业大赛校赛入围的经历，思辨能力较强、专业知识深厚。</div>
+                        </div>
+                        <span class="card-arrow">↗</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 联系我们 -->
+            <div class="section-block" id="section-contact">
+                <div class="section-header">
+                    <div class="section-indicator"></div>
+                    <div>
+                        <h2>联系我们</h2>
+                        <div class="section-subtitle">指导教师 · 项目负责人 · 院校信息</div>
+                    </div>
+                </div>
+                <div class="cards-grid">
+                    <a class="card" href="mailto:junfengjiao@126.com" target="_blank">
+                        <div class="card-icon">🎓</div>
+                        <div class="card-body">
+                            <div class="card-title">焦俊峰 教授（指导教师）</div>
+                            <div class="card-desc">中南财经政法大学刑事司法学院教授。联系电话：13886007234 · 电子邮箱：junfengjiao@126.com</div>
+                        </div>
+                        <span class="card-arrow">↗</span>
+                    </a>
+                    <a class="card" href="mailto:wlsoo@sina.com" target="_blank">
+                        <div class="card-icon">🎓</div>
+                        <div class="card-body">
+                            <div class="card-title">王良顺 教授（指导教师）</div>
+                            <div class="card-desc">中南财经政法大学刑事司法学院教授。联系电话：13971633858 · 电子邮箱：wlsoo@sina.com</div>
+                        </div>
+                        <span class="card-arrow">↗</span>
+                    </a>
+                    <a class="card" href="mailto:964193677@qq.com" target="_blank">
+                        <div class="card-icon">📧</div>
+                        <div class="card-body">
+                            <div class="card-title">陈泽和（项目负责人）</div>
+                            <div class="card-desc">刑事司法学院 · 侦查2302班。联系电话：18160908811 · 电子邮箱：964193677@qq.com</div>
+                        </div>
+                        <span class="card-arrow">↗</span>
+                    </a>
+                    <a class="card" href="https://www.baidu.com/s?wd=中南财经政法大学+刑事司法学院" target="_blank">
+                        <div class="card-icon">🏛</div>
+                        <div class="card-body">
+                            <div class="card-title">中南财经政法大学</div>
+                            <div class="card-desc"> 刑事司法学院</div>
+                        </div>
+                        <span class="card-arrow">↗</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        (function() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
+            const sectionBlocks = document.querySelectorAll('.section-block');
+            const searchInput = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchBtn');
+            const engineTabs = document.querySelectorAll('.search-engine-tab');
+            const contentArea = document.getElementById('contentArea');
+
+            let currentEngine = 'baidu';
+            let isScrollingFromClick = false;
+            let scrollTimeout = null;
+
+            // 搜索引擎切换
+            engineTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    engineTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    currentEngine = this.dataset.engine;
+                });
+            });
+
+            // 搜索功能
+            function performSearch() {
+                const query = searchInput.value.trim();
+                if (!query) {
+                    searchInput.focus();
+                    searchInput.style.borderColor = '#e07060';
+                    setTimeout(() => { searchInput.style.borderColor = '#e2e7ee'; }, 1200);
+                    return;
+                }
+                let searchUrl = '';
+                switch (currentEngine) {
+                    case 'baidu': searchUrl = 'https://www.baidu.com/s?wd=' + encodeURIComponent(query); break;
+                    case 'google': searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(query); break;
+                    case 'bing': searchUrl = 'https://www.bing.com/search?q=' + encodeURIComponent(query); break;
+                    default: searchUrl = 'https://www.baidu.com/s?wd=' + encodeURIComponent(query);
+                }
+                window.open(searchUrl, '_blank', 'noopener');
+            }
+
+            searchBtn.addEventListener('click', performSearch);
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    performSearch();
+                }
+            });
+
+            // 移动端侧边栏
+            function openSidebar() {
+                sidebar.classList.add('open');
+                sidebarOverlay.classList.add('visible');
+                mobileMenuBtn.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+            function closeSidebar() {
+                sidebar.classList.remove('open');
+                sidebarOverlay.classList.remove('visible');
+                mobileMenuBtn.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+            function toggleSidebar() {
+                sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+            }
+
+            mobileMenuBtn.addEventListener('click', toggleSidebar);
+            sidebarOverlay.addEventListener('click', closeSidebar);
+
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 768) {
+                        setTimeout(closeSidebar, 200);
+                    }
+                });
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && sidebar.classList.contains('open')) closeSidebar();
+            });
+
+            // 导航点击平滑滚动
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.dataset.target;
+                    const targetBlock = document.getElementById(targetId);
+                    if (targetBlock) {
+                        isScrollingFromClick = true;
+                        if (scrollTimeout) clearTimeout(scrollTimeout);
+
+                        navItems.forEach(n => n.classList.remove('active'));
+                        this.classList.add('active');
+
+                        targetBlock.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        scrollTimeout = setTimeout(() => { isScrollingFromClick = false; }, 800);
+                    }
+                });
+            });
+
+            // 滚动监听
+            function getCurrentSection() {
+                const scrollTop = contentArea.scrollTop;
+                const offset = 120;
+                let currentSectionId = null;
+                let minDistance = Infinity;
+
+                sectionBlocks.forEach(block => {
+                    const rect = block.getBoundingClientRect();
+                    const contentRect = contentArea.getBoundingClientRect();
+                    const relativeTop = rect.top - contentRect.top - offset;
+                    if (relativeTop <= 60 && relativeTop > -rect.height + 60) {
+                        const distance = Math.abs(relativeTop);
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                            currentSectionId = block.id;
+                        }
+                    }
+                });
+
+                if (!currentSectionId && scrollTop < 100) {
+                    currentSectionId = sectionBlocks[0]?.id;
+                }
+                if (!currentSectionId) {
+                    const totalScroll = contentArea.scrollTop + contentArea.clientHeight;
+                    const totalHeight = contentArea.scrollHeight;
+                    if (totalScroll >= totalHeight - 60) {
+                        currentSectionId = sectionBlocks[sectionBlocks.length - 1]?.id;
+                    }
+                }
+                return currentSectionId;
+            }
+
+            function updateActiveNav(currentId) {
+                navItems.forEach(item => {
+                    item.classList.toggle('active', item.dataset.target === currentId);
+                });
+            }
+
+            let ticking = false;
+            contentArea.addEventListener('scroll', function() {
+                if (isScrollingFromClick) return;
+                if (!ticking) {
+                    requestAnimationFrame(() => {
+                        const currentId = getCurrentSection();
+                        if (currentId) updateActiveNav(currentId);
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+
+            setTimeout(() => {
+                const initialId = getCurrentSection();
+                if (initialId) updateActiveNav(initialId);
+            }, 300);
+
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768 && sidebar.classList.contains('open')) closeSidebar();
+            });
+
+            // Ctrl+K 聚焦搜索
+            document.addEventListener('keydown', function(e) {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                    e.preventDefault();
+                    searchInput.focus();
+                    searchInput.select();
+                }
+            });
+
+            console.log('✅ 大创项目导航网站已就绪 – 悬停卡片可查看完整描述');
+        })();
+    </script>
+</body>
+</html>
