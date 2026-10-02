@@ -1,0 +1,2432 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crazifan · 摄影约拍工作室</title>
+<style>
+/* =========================================================
+   基础变量 & 重置
+   ========================================================= */
+:root{
+  --bg:#faf9f7;
+  --surface:#ffffff;
+  --ink:#17171a;
+  --ink-2:#4a4a52;
+  --muted:#8b8b93;
+  --line:#eae7e2;
+  --accent:#9c7b52;
+  --accent-soft:#f4efe7;
+  --sidebar-w:264px;
+  --radius:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:"Inter","PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img,svg{display:block}
+button{font-family:inherit}
+::selection{background:#e6d9c4;color:var(--ink)}
+
+.nav::-webkit-scrollbar,
+.search-panel::-webkit-scrollbar,
+.subpage::-webkit-scrollbar,
+.slider-thumbs::-webkit-scrollbar{width:8px;height:8px}
+.nav::-webkit-scrollbar-thumb,
+.search-panel::-webkit-scrollbar-thumb,
+.subpage::-webkit-scrollbar-thumb,
+.slider-thumbs::-webkit-scrollbar-thumb{background:#ddd7cd;border-radius:8px}
+.nav::-webkit-scrollbar-track,
+.search-panel::-webkit-scrollbar-track,
+.subpage::-webkit-scrollbar-track,
+.slider-thumbs::-webkit-scrollbar-track{background:transparent}
+
+/* =========================================================
+   汉堡按钮 & 遮罩
+   ========================================================= */
+.menu-btn{
+  position:fixed;top:16px;left:16px;z-index:70;
+  width:44px;height:44px;border-radius:13px;
+  background:#fff;border:1px solid var(--line);
+  display:none;place-items:center;cursor:pointer;
+  color:var(--ink);
+  box-shadow:0 6px 18px -10px rgba(0,0,0,.35);
+  transition:transform .2s, box-shadow .2s;
+}
+.menu-btn:hover{box-shadow:0 10px 24px -12px rgba(0,0,0,.4)}
+.menu-btn:active{transform:scale(.94)}
+
+.overlay{
+  position:fixed;inset:0;z-index:55;
+  background:rgba(23,23,26,.42);
+  backdrop-filter:blur(2px);
+  opacity:0;pointer-events:none;
+  transition:opacity .35s ease;
+}
+.overlay.show{opacity:1;pointer-events:auto}
+
+/* =========================================================
+   左侧导航栏
+   ========================================================= */
+.sidebar{
+  position:fixed;top:0;left:0;bottom:0;
+  width:var(--sidebar-w);
+  background:#fffdfb;
+  border-right:1px solid var(--line);
+  display:flex;flex-direction:column;
+  padding:28px 20px 24px;
+  z-index:60;
+}
+.brand{display:flex;align-items:center;gap:12px;padding:0 6px 28px;}
+.brand-mark{
+  width:42px;height:42px;border-radius:13px;
+  background:var(--ink);color:#e6d3b3;
+  display:grid;place-items:center;
+  font-weight:600;font-size:17px;letter-spacing:.5px;
+  flex:none;
+}
+.brand-name{display:block;font-size:14.5px;font-weight:700;letter-spacing:.16em;}
+.brand-sub{display:block;font-size:11.5px;color:var(--muted);letter-spacing:.06em;}
+
+.nav{display:flex;flex-direction:column;gap:4px;flex:1;overflow-y:auto;}
+.nav-label{
+  font-size:11px;letter-spacing:.2em;color:var(--muted);
+  padding:0 10px 10px;text-transform:uppercase;
+}
+.nav-item{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 14px;border-radius:10px;
+  font-size:14.5px;color:var(--ink-2);
+  text-decoration:none;position:relative;
+  transition:background .25s,color .25s;
+}
+.nav-item .nav-idx{
+  font-size:11px;color:#c0bbb3;
+  font-variant-numeric:tabular-nums;letter-spacing:.06em;
+  transition:color .25s;
+}
+.nav-item:hover{background:#f4f1ec;color:var(--ink);}
+.nav-item.active{background:var(--ink);color:#fff;}
+.nav-item.active .nav-idx{color:rgba(255,255,255,.45);}
+
+.sidebar-foot{
+  border-top:1px solid var(--line);
+  padding-top:18px;margin-top:18px;
+  display:flex;flex-direction:column;gap:12px;
+}
+.contact{font-size:11.5px;color:var(--muted);letter-spacing:.06em;}
+.contact strong{display:block;font-size:14.5px;color:var(--ink);font-weight:600;letter-spacing:.04em;margin-top:3px;}
+.cta{
+  display:block;text-align:center;
+  padding:12px;border-radius:11px;
+  background:var(--ink);color:#fff;text-decoration:none;
+  font-size:14px;letter-spacing:.08em;
+  transition:background .25s, transform .25s, box-shadow .25s;
+}
+.cta:hover{background:#000;transform:translateY(-1px);box-shadow:0 10px 22px -12px rgba(0,0,0,.8);}
+
+/* =========================================================
+   右侧主区
+   ========================================================= */
+.main{margin-left:var(--sidebar-w);min-height:100vh;}
+
+.searchbar{
+  position:sticky;top:0;z-index:45;
+  background:rgba(250,249,247,.86);
+  backdrop-filter:blur(16px) saturate(1.5);
+  -webkit-backdrop-filter:blur(16px) saturate(1.5);
+  border-bottom:1px solid var(--line);
+}
+.searchbar-inner{
+  position:relative;
+  max-width:1120px;margin:0 auto;
+  padding:14px 48px;
+}
+.search-field{
+  display:flex;align-items:center;gap:11px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:0 14px;height:50px;
+  transition:border-color .25s ease, box-shadow .25s ease;
+}
+.search-field:focus-within{
+  border-color:#cbb99a;
+  box-shadow:0 0 0 4px rgba(156,123,82,.10);
+}
+.search-field .sf-icon{color:var(--muted);flex:none;transition:color .25s}
+.search-field:focus-within .sf-icon{color:var(--accent)}
+.search-field input{
+  flex:1;min-width:0;
+  border:0;outline:0;background:transparent;
+  font-size:14.5px;color:var(--ink);font-family:inherit;
+}
+.search-field input::placeholder{color:#b3b0aa;}
+.search-clear{
+  flex:none;width:24px;height:24px;border-radius:50%;
+  border:0;background:#f0ede8;color:var(--ink-2);
+  display:none;place-items:center;cursor:pointer;font-size:14px;line-height:1;
+  transition:background .2s,color .2s,transform .2s;
+}
+.search-clear.show{display:grid;}
+.search-clear:hover{background:var(--ink);color:#fff;}
+.search-clear:active{transform:scale(.9)}
+.search-kbd{
+  flex:none;font-size:11px;color:var(--muted);
+  border:1px solid var(--line);border-radius:6px;
+  padding:2px 7px;line-height:1.5;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+.search-panel{
+  position:absolute;
+  top:calc(100% - 2px);left:48px;right:48px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:14px;
+  box-shadow:0 28px 60px -34px rgba(24,20,15,.55);
+  padding:8px;
+  max-height:min(380px,60vh);overflow-y:auto;
+  opacity:0;visibility:hidden;transform:translateY(-8px);
+  transition:opacity .22s ease, transform .22s ease, visibility .22s;
+  z-index:5;
+}
+.search-panel.show{opacity:1;visibility:visible;transform:none;}
+.search-head{
+  font-size:11px;letter-spacing:.14em;color:var(--muted);
+  padding:8px 12px 10px;text-transform:uppercase;
+}
+.search-item{
+  display:flex;align-items:center;gap:14px;width:100%;
+  padding:10px 12px;border:0;background:transparent;
+  border-radius:10px;cursor:pointer;text-align:left;
+  transition:background .18s ease;
+}
+.search-item:hover,.search-item:focus-visible{background:#f6f3ee;outline:none}
+.si-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;}
+.si-title{
+  font-size:14px;font-weight:600;color:var(--ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.si-desc{
+  font-size:12.5px;color:var(--muted);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.si-tag{
+  flex:none;font-size:11px;letter-spacing:.06em;
+  color:var(--accent);background:var(--accent-soft);
+  padding:4px 10px;border-radius:999px;white-space:nowrap;
+}
+.search-empty{
+  padding:26px 16px;text-align:center;
+  display:flex;flex-direction:column;gap:6px;
+}
+.search-empty .se-title{font-size:13.5px;color:var(--ink-2);}
+.search-empty .se-sub{font-size:12px;color:var(--muted);}
+.search-more{
+  font-size:11.5px;color:var(--muted);
+  padding:10px 12px 6px;text-align:center;
+}
+
+.main-inner{max-width:1120px;margin:0 auto;padding:0 48px 100px;}
+
+.hero{padding:72px 0 66px;border-bottom:1px solid var(--line);}
+.eyebrow{
+  font-size:11.5px;letter-spacing:.2em;color:var(--muted);
+  text-transform:uppercase;font-weight:500;
+}
+.hero h1{
+  font-size:clamp(30px,4.2vw,46px);
+  line-height:1.28;font-weight:600;letter-spacing:-.015em;
+  margin:18px 0 20px;
+}
+.hero p{font-size:15px;color:var(--ink-2);max-width:640px;line-height:1.95;}
+.hero-stats{display:flex;gap:60px;margin-top:46px;flex-wrap:wrap;}
+.hero-stats strong{display:block;font-size:24px;font-weight:600;letter-spacing:-.01em;}
+.hero-stats span{font-size:12.5px;color:var(--muted);}
+
+.section{
+  padding:76px 0;
+  border-bottom:1px solid var(--line);
+  scroll-margin-top:96px;
+}
+.section:last-of-type{border-bottom:none;}
+.section-head{max-width:680px;margin-bottom:38px;}
+.section-head h2{font-size:26px;font-weight:600;letter-spacing:-.01em;margin:12px 0 10px;}
+.section-head p{font-size:14.5px;color:var(--muted);line-height:1.9;}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:16px;
+}
+
+.empty-state{
+  display:none;
+  margin-top:16px;padding:40px 24px;text-align:center;
+  border:1px dashed #e0dad0;border-radius:var(--radius);
+  background:rgba(255,255,255,.55);
+}
+.empty-state.show{display:flex;flex-direction:column;gap:6px;}
+.empty-state strong{font-size:14px;font-weight:600;color:var(--ink-2);}
+.empty-state span{font-size:13px;color:var(--muted);}
+
+/* =========================================================
+   卡片组件
+   ========================================================= */
+.card{
+  display:flex;gap:16px;padding:22px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  text-decoration:none;color:inherit;
+  position:relative;overflow:hidden;
+  transition:transform .32s cubic-bezier(.2,.8,.2,1),
+             box-shadow .32s ease,
+             border-color .32s ease;
+}
+.card.is-hidden{display:none;}
+.card::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(520px circle at 0% 0%, rgba(156,123,82,.07), transparent 46%);
+  opacity:0;transition:opacity .32s ease;
+}
+.card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 18px 42px -24px rgba(24,20,15,.45);
+  border-color:#ded7cb;
+}
+.card:hover::after{opacity:1;}
+.card:hover .card-icon{background:var(--ink);color:#f0e4d2;transform:rotate(-4deg);}
+.card:hover .card-arrow{opacity:1;transform:translate(0,0);}
+.card:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+
+.card-icon{
+  flex:none;width:48px;height:48px;border-radius:14px;
+  background:#f5f2ed;color:var(--ink);
+  display:grid;place-items:center;
+  transition:background .32s,color .32s,transform .32s;
+}
+.card-body{flex:1;min-width:0;}
+.card-top{
+  display:flex;align-items:baseline;justify-content:space-between;
+  gap:10px;margin-bottom:6px;
+}
+.card-top h3{font-size:15.5px;font-weight:600;letter-spacing:.01em;line-height:1.45;}
+.card-arrow{
+  font-size:14px;color:var(--accent);flex:none;
+  opacity:0;transform:translate(-5px,5px);
+  transition:opacity .3s, transform .3s;
+}
+.card-price{
+  font-size:15px;font-weight:600;color:var(--accent);
+  letter-spacing:.02em;flex:none;font-variant-numeric:tabular-nums;
+}
+.card-body p{font-size:13.5px;color:var(--muted);line-height:1.85;}
+.card-tag{
+  display:inline-block;margin-top:13px;
+  font-size:11.5px;letter-spacing:.08em;
+  color:var(--accent);background:var(--accent-soft);
+  padding:4px 11px;border-radius:999px;
+}
+
+@keyframes flashPulse{
+  0%{box-shadow:0 0 0 0 rgba(156,123,82,0);}
+  32%{box-shadow:0 0 0 6px rgba(156,123,82,.22);}
+  100%{box-shadow:0 0 0 0 rgba(156,123,82,0);}
+}
+.card.flash,.work.flash,.device-card.flash{
+  animation:flashPulse 1.4s ease;
+  border-color:#d9c8ab;
+}
+
+/* =========================================================
+   页脚
+   ========================================================= */
+.site-footer{padding:80px 0 40px;scroll-margin-top:96px;}
+.footer-grid{
+  display:grid;grid-template-columns:1.05fr 1fr;gap:56px;
+  padding-bottom:46px;border-bottom:1px solid var(--line);
+}
+.footer-grid h2{font-size:24px;font-weight:600;letter-spacing:-.01em;margin:12px 0 14px;}
+.footer-grid p{font-size:14px;color:var(--muted);line-height:1.95;max-width:400px;}
+.footer-list{display:grid;grid-template-columns:1fr 1fr;gap:24px 32px;align-content:start;}
+.footer-list span{display:block;font-size:11.5px;color:var(--muted);letter-spacing:.08em;margin-bottom:5px;}
+.footer-list strong{font-size:14px;font-weight:500;line-height:1.6;}
+.copyright{margin-top:28px;font-size:12.5px;color:var(--muted);}
+
+/* =========================================================
+   子页面通用
+   ========================================================= */
+.subpage{
+  position:fixed;inset:0;
+  background:var(--bg);
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+  transform:translateX(100%);
+  opacity:0;visibility:hidden;
+  transition:transform .5s cubic-bezier(.4,0,.2,1), opacity .35s ease, visibility .5s;
+}
+.subpage.open{transform:none;opacity:1;visibility:visible;}
+#subpage{z-index:120;}
+#gearPage,#pricingPage{z-index:130;}
+#deviceDetail{z-index:140;}
+#workDetail{z-index:150;}
+
+.subpage-inner{max-width:1200px;margin:0 auto;padding:0 48px 100px;}
+
+.subpage-head{
+  position:sticky;top:0;z-index:10;
+  display:flex;align-items:center;gap:20px;
+  padding:24px 0 18px;
+  background:var(--bg);
+  border-bottom:1px solid var(--line);
+  margin-bottom:34px;
+}
+.back-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:9px 17px;border-radius:999px;
+  border:1px solid var(--line);background:#fff;
+  color:var(--ink-2);font-size:13.5px;cursor:pointer;
+  transition:background .25s,color .25s,border-color .25s,transform .25s;
+  flex:none;
+}
+.back-btn:hover{background:var(--ink);color:#fff;border-color:var(--ink);}
+.back-btn:active{transform:scale(.96);}
+.subpage-title{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;}
+.subpage-title .eyebrow{font-size:10.5px;}
+.subpage-title h2{font-size:19px;font-weight:600;letter-spacing:-.01em;}
+.subpage-count{font-size:12.5px;color:var(--muted);flex:none;}
+
+.sub-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 34px;}
+.sub-tab{
+  padding:8px 17px;border-radius:999px;
+  border:1px solid var(--line);background:transparent;
+  color:var(--ink-2);font-size:13.5px;cursor:pointer;
+  transition:background .25s,color .25s,border-color .25s,transform .25s;
+}
+.sub-tab:hover{border-color:#cfc6b8;color:var(--ink);}
+.sub-tab.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+.sub-tab:active{transform:scale(.96);}
+
+/* =========================================================
+   作品集
+   ========================================================= */
+.sub-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(228px,1fr));
+  gap:24px;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.work{
+  display:block;text-decoration:none;color:inherit;
+  border-radius:14px;
+  animation:fadeUp .5s both;
+  cursor:pointer;
+}
+.work-thumb{
+  position:relative;aspect-ratio:4/5;
+  border-radius:14px;overflow:hidden;
+  background-size:cover;
+  background-position:center;
+  background-color:#e8e4de;
+  transition:transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s ease;
+}
+.work-thumb::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(20,16,12,.4),transparent 58%);
+  opacity:.75;transition:opacity .4s ease;
+}
+.work:hover .work-thumb{
+  transform:translateY(-6px);
+  box-shadow:0 24px 46px -26px rgba(24,20,15,.6);
+}
+.work:hover .work-thumb::after{opacity:1;}
+.work-cat{
+  position:absolute;left:12px;bottom:12px;z-index:2;
+  font-size:11px;letter-spacing:.1em;color:#fff;
+  background:rgba(255,255,255,.18);
+  border:1px solid rgba(255,255,255,.28);
+  backdrop-filter:blur(6px);
+  padding:4px 10px;border-radius:999px;
+}
+.work-open{
+  position:absolute;right:12px;top:12px;z-index:2;
+  width:30px;height:30px;border-radius:50%;
+  display:grid;place-items:center;
+  background:rgba(255,255,255,.92);color:var(--ink);font-size:13px;
+  opacity:0;transform:translateY(-7px);
+  transition:opacity .35s ease, transform .35s ease;
+}
+.work:hover .work-open{opacity:1;transform:none;}
+.work h4{font-size:14px;font-weight:600;margin-top:13px;letter-spacing:.01em;}
+.work > span{font-size:12.5px;color:var(--muted);}
+
+/* =========================================================
+   作品三级页 · 滑动播放
+   ========================================================= */
+.slider{position:relative;}
+
+.slider-stage{
+  position:relative;
+  aspect-ratio:16/10;
+  max-height:620px;
+  border-radius:22px;
+  overflow:hidden;
+  background:#111114;
+  box-shadow:0 32px 70px -44px rgba(24,20,15,.7);
+  touch-action:pan-y;
+}
+
+.slider-track{
+  display:flex;
+  height:100%;
+  transition:transform .58s cubic-bezier(.4,0,.2,1);
+  will-change:transform;
+}
+
+.slide{
+  position:relative;
+  flex:0 0 100%;
+  width:100%;height:100%;
+  display:grid;place-items:center;
+  isolation:isolate;
+  overflow:hidden;
+  background-size:cover;
+  background-position:center;
+  background-color:#1a1a1e;
+}
+.slide::before{
+  content:"";position:absolute;inset:0;z-index:1;
+  background:
+    radial-gradient(120% 100% at 22% 12%, rgba(255,255,255,.14), transparent 58%),
+    radial-gradient(90% 80% at 88% 92%, rgba(0,0,0,.36), transparent 62%);
+}
+.slide-tag{
+  position:absolute;left:24px;bottom:22px;z-index:3;
+  display:flex;flex-direction:column;gap:5px;
+  color:#fff;
+  text-shadow:0 2px 12px rgba(0,0,0,.6);
+}
+.slide-tag strong{font-size:16px;font-weight:600;letter-spacing:.02em;}
+.slide-tag span{font-size:12.5px;opacity:.78;letter-spacing:.04em;}
+.slide-num{
+  position:absolute;right:24px;bottom:22px;z-index:3;
+  font-size:12px;letter-spacing:.18em;
+  color:rgba(255,255,255,.7);
+  font-variant-numeric:tabular-nums;
+  text-shadow:0 2px 8px rgba(0,0,0,.6);
+}
+
+.slider-nav{
+  position:absolute;top:50%;z-index:6;
+  transform:translateY(-50%);
+  width:46px;height:46px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.28);
+  background:rgba(255,255,255,.14);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  color:#fff;font-size:22px;line-height:1;
+  display:grid;place-items:center;cursor:pointer;
+  opacity:0;
+  transition:opacity .3s ease, background .25s ease, transform .25s ease;
+}
+.slider-stage:hover .slider-nav{opacity:1;}
+.slider-nav:hover{background:rgba(255,255,255,.92);color:var(--ink);border-color:transparent;}
+.slider-nav:active{transform:translateY(-50%) scale(.92);}
+.slider-nav.prev{left:18px;}
+.slider-nav.next{right:18px;}
+
+.slider-counter{
+  position:absolute;right:20px;top:18px;z-index:6;
+  font-size:12px;letter-spacing:.14em;
+  color:#fff;
+  background:rgba(20,16,12,.34);
+  border:1px solid rgba(255,255,255,.2);
+  backdrop-filter:blur(8px);
+  padding:5px 13px;border-radius:999px;
+  font-variant-numeric:tabular-nums;
+}
+
+.slider-play{
+  position:absolute;left:20px;top:18px;z-index:6;
+  width:36px;height:36px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.22);
+  background:rgba(20,16,12,.34);
+  backdrop-filter:blur(8px);
+  color:#fff;display:grid;place-items:center;cursor:pointer;
+  transition:background .25s, transform .25s;
+}
+.slider-play:hover{background:rgba(255,255,255,.92);color:var(--ink);}
+.slider-play:active{transform:scale(.92);}
+.slider-play .ico-pause{display:block}
+.slider-play .ico-play{display:none}
+.slider-play.paused .ico-pause{display:none}
+.slider-play.paused .ico-play{display:block}
+
+.slider-thumbs{
+  display:flex;gap:10px;
+  margin-top:16px;
+  overflow-x:auto;
+  padding:4px 2px 8px;
+  scrollbar-width:thin;
+}
+.thumb{
+  flex:0 0 auto;
+  width:88px;aspect-ratio:16/10;
+  border-radius:10px;
+  border:2px solid transparent;
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+  opacity:.5;
+  background-size:cover;
+  background-position:center;
+  background-color:#ddd8d1;
+  transition:opacity .25s ease, border-color .25s ease, transform .25s ease;
+}
+.thumb::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(20,16,12,.34),transparent 60%);
+}
+.thumb:hover{opacity:.82;transform:translateY(-2px);}
+.thumb.active{opacity:1;border-color:var(--ink);}
+.thumb-num{
+  position:absolute;left:7px;bottom:5px;z-index:2;
+  font-size:10px;letter-spacing:.1em;color:#fff;
+  font-variant-numeric:tabular-nums;
+}
+
+.wd-meta{margin-top:44px;}
+.wd-meta-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:26px 34px;
+  padding-bottom:30px;
+  border-bottom:1px solid var(--line);
+}
+.wd-meta-grid span{
+  display:block;font-size:11.5px;letter-spacing:.12em;
+  color:var(--muted);margin-bottom:7px;text-transform:uppercase;
+}
+.wd-meta-grid strong{font-size:15px;font-weight:600;letter-spacing:.01em;}
+.wd-note{
+  margin-top:26px;
+  font-size:14.5px;color:var(--ink-2);line-height:2;
+  max-width:760px;
+}
+
+/* =========================================================
+   设备页
+   ========================================================= */
+.gear-intro{max-width:660px;margin-bottom:44px;}
+.gear-intro p{font-size:14.5px;color:var(--muted);line-height:1.9;}
+
+.gear-cat-block{
+  padding:38px 0;
+  border-top:1px solid var(--line);
+  scroll-margin-top:96px;
+}
+.gear-cat-block:first-of-type{border-top:none;padding-top:0;}
+
+.gcat-head{
+  display:flex;align-items:flex-start;gap:16px;
+  margin-bottom:26px;
+}
+.gcat-icon{
+  flex:none;width:46px;height:46px;border-radius:14px;
+  background:#f2efe9;color:var(--ink);
+  display:grid;place-items:center;
+}
+.gcat-text h3{font-size:19px;font-weight:600;letter-spacing:-.01em;margin-bottom:5px;}
+.gcat-text p{font-size:13.5px;color:var(--muted);line-height:1.8;max-width:600px;}
+.gcat-count{
+  margin-left:auto;flex:none;
+  font-size:11.5px;letter-spacing:.08em;
+  color:var(--accent);background:var(--accent-soft);
+  padding:5px 12px;border-radius:999px;
+}
+
+.device-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:20px;
+}
+.device-card{
+  display:block;text-decoration:none;color:inherit;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:#fff;
+  padding:14px 14px 18px;
+  cursor:pointer;
+  transition:transform .32s cubic-bezier(.2,.8,.2,1),
+             box-shadow .32s ease,
+             border-color .32s ease;
+}
+.device-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 22px 46px -26px rgba(24,20,15,.5);
+  border-color:#ded7cb;
+}
+.device-card:hover .device-img{transform:scale(1.03);}
+.device-card:hover .device-go{opacity:1;transform:none;}
+
+.device-img{
+  position:relative;
+  aspect-ratio:16/11;
+  border-radius:12px;
+  overflow:hidden;
+  background-size:cover;
+  background-position:center;
+  background-color:#e8e4de;
+  transition:transform .4s cubic-bezier(.2,.8,.2,1);
+}
+.device-img::before{
+  content:"";position:absolute;inset:0;z-index:1;
+  background:linear-gradient(to top,rgba(20,16,12,.28),transparent 62%);
+}
+.device-go{
+  position:absolute;right:10px;top:10px;z-index:3;
+  width:28px;height:28px;border-radius:50%;
+  display:grid;place-items:center;
+  background:rgba(255,255,255,.92);color:var(--ink);font-size:12px;
+  opacity:0;transform:translateY(-6px);
+  transition:opacity .32s ease, transform .32s ease;
+}
+.device-name{font-size:14.5px;font-weight:600;margin-top:14px;letter-spacing:.01em;}
+.device-sub{font-size:12.5px;color:var(--muted);margin-top:3px;}
+.device-badge{
+  display:inline-block;margin-top:10px;
+  font-size:11px;letter-spacing:.06em;
+  color:var(--accent);background:var(--accent-soft);
+  padding:4px 10px;border-radius:999px;
+}
+
+.dd-grid{
+  display:grid;
+  grid-template-columns:0.92fr 1.08fr;
+  gap:48px;
+  align-items:start;
+  padding-top:6px;
+}
+.dd-visual{
+  position:relative;
+  aspect-ratio:4/3;
+  border-radius:20px;
+  overflow:hidden;
+  background-size:cover;
+  background-position:center;
+  background-color:#e8e4de;
+}
+.dd-visual::before{
+  content:"";position:absolute;inset:0;z-index:1;
+  background:linear-gradient(to top,rgba(20,16,12,.2),transparent 60%);
+}
+
+.dd-info .dd-badge{
+  display:inline-block;
+  font-size:11.5px;letter-spacing:.1em;
+  color:var(--accent);background:var(--accent-soft);
+  padding:5px 13px;border-radius:999px;
+  margin-bottom:16px;
+}
+.dd-info h3{font-size:26px;font-weight:600;letter-spacing:-.015em;line-height:1.3;margin-bottom:14px;}
+.dd-info > p{font-size:14.5px;color:var(--muted);line-height:1.95;}
+
+.spec-table{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:0;
+  margin-top:30px;
+  border-top:1px solid var(--line);
+}
+.spec-table dt,
+.spec-table dd{
+  padding:14px 0;
+  border-bottom:1px solid var(--line);
+  font-size:13.5px;
+  line-height:1.7;
+}
+.spec-table dt{color:var(--muted);padding-right:30px;white-space:nowrap;letter-spacing:.02em;}
+.spec-table dd{color:var(--ink);font-weight:500;}
+
+/* =========================================================
+   收费详情
+   ========================================================= */
+.price-hero{
+  display:grid;
+  grid-template-columns:0.88fr 1.12fr;
+  gap:52px;
+  align-items:center;
+  padding-bottom:50px;
+  border-bottom:1px solid var(--line);
+}
+.price-visual{
+  position:relative;
+  aspect-ratio:5/4;
+  border-radius:20px;
+  overflow:hidden;
+  background-size:cover;
+  background-position:center;
+  background-color:#e8e4de;
+}
+.price-visual::before{
+  content:"";position:absolute;inset:0;z-index:1;
+  background:linear-gradient(to top,rgba(20,16,12,.55),rgba(20,16,12,.12) 55%);
+}
+.pv-badge{
+  position:absolute;top:18px;left:18px;z-index:3;
+  font-size:11.5px;letter-spacing:.1em;
+  color:#fff;background:rgba(255,255,255,.18);
+  border:1px solid rgba(255,255,255,.3);
+  backdrop-filter:blur(8px);
+  padding:5px 12px;border-radius:999px;
+}
+.pv-price{
+  position:absolute;left:22px;bottom:20px;z-index:3;
+  display:flex;align-items:baseline;gap:7px;color:#fff;
+  text-shadow:0 2px 12px rgba(0,0,0,.5);
+}
+.pv-price strong{font-size:40px;font-weight:600;letter-spacing:-.03em;line-height:1;}
+.pv-price span{font-size:13px;opacity:.78;}
+
+.price-info h3{
+  font-size:clamp(22px,2.6vw,30px);
+  font-weight:600;letter-spacing:-.015em;
+  line-height:1.32;margin:14px 0 16px;
+}
+.price-info > p{font-size:14.5px;color:var(--muted);line-height:1.95;}
+
+.price-meta{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:20px 32px;
+  margin-top:30px;
+  padding-top:26px;
+  border-top:1px solid var(--line);
+}
+.price-meta span{
+  display:block;font-size:11.5px;letter-spacing:.1em;
+  color:var(--muted);margin-bottom:6px;text-transform:uppercase;
+}
+.price-meta strong{font-size:14px;font-weight:500;line-height:1.7;}
+
+.price-block{padding:46px 0;border-bottom:1px solid var(--line);}
+.price-block:last-of-type{border-bottom:none;}
+.price-block > h4{
+  font-size:19px;font-weight:600;letter-spacing:-.01em;
+  margin-bottom:6px;
+}
+.price-block > .block-sub{
+  font-size:13.5px;color:var(--muted);line-height:1.8;margin-bottom:24px;
+}
+
+.inc-list{
+  list-style:none;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0 40px;
+}
+.inc-list li{
+  display:flex;align-items:flex-start;gap:12px;
+  font-size:14px;color:var(--ink-2);line-height:1.75;
+  padding:13px 0;
+  border-bottom:1px solid #f2efea;
+}
+.inc-list li::before{
+  content:"";flex:none;
+  width:6px;height:6px;margin-top:9px;
+  border-radius:50%;background:var(--accent);
+}
+
+.flow{
+  list-style:none;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:16px;
+}
+.flow li{
+  padding:24px 22px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:#fff;
+  transition:transform .3s cubic-bezier(.2,.8,.2,1),
+             border-color .3s,
+             box-shadow .3s;
+}
+.flow li:hover{
+  transform:translateY(-3px);
+  border-color:#ded7cb;
+  box-shadow:0 18px 40px -26px rgba(24,20,15,.5);
+}
+.flow-num{
+  display:block;
+  font-size:11px;letter-spacing:.18em;
+  color:var(--accent);margin-bottom:12px;
+}
+.flow li strong{display:block;font-size:14.5px;font-weight:600;margin-bottom:8px;}
+.flow li p{font-size:13px;color:var(--muted);line-height:1.8;}
+
+/* =========================================================
+   响应式
+   ========================================================= */
+@media (max-width:960px){
+  .sidebar{
+    transform:translateX(-100%);
+    transition:transform .42s cubic-bezier(.4,0,.2,1);
+    box-shadow:0 0 70px rgba(0,0,0,.16);
+    width:272px;
+  }
+  .sidebar.open{transform:none;}
+  .menu-btn{display:grid;}
+  .main{margin-left:0;}
+
+  .searchbar-inner{padding:12px 22px 12px 70px;}
+  .search-panel{left:22px;right:22px;max-height:min(320px,55vh);}
+  .search-kbd{display:none;}
+
+  .main-inner{padding:0 22px 80px;}
+  .hero{padding:48px 0 46px;}
+  .hero-stats{gap:36px;}
+  .section{padding:60px 0;scroll-margin-top:86px;}
+  .grid{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr;gap:36px;}
+  .footer-list{grid-template-columns:1fr 1fr;}
+
+  .subpage-inner{padding:0 22px 80px;}
+  .subpage-head{flex-wrap:wrap;gap:12px;padding:18px 0 14px;margin-bottom:26px;}
+  .subpage-count{display:none;}
+  .si-tag{display:none;}
+
+  .sub-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px;}
+  .device-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;}
+  .gcat-head{flex-wrap:wrap;}
+  .gcat-count{margin-left:0;}
+
+  .dd-grid{grid-template-columns:1fr;gap:30px;}
+  .dd-visual{aspect-ratio:16/11;}
+
+  .price-hero{grid-template-columns:1fr;gap:30px;}
+  .price-visual{aspect-ratio:16/11;}
+  .inc-list{grid-template-columns:1fr;}
+  .price-meta{grid-template-columns:1fr;}
+
+  .slider-stage{aspect-ratio:4/3;max-height:none;border-radius:18px;}
+  .slider-nav{opacity:1;width:40px;height:40px;font-size:20px;}
+  .slider-nav.prev{left:10px;}
+  .slider-nav.next{right:10px;}
+  .slider-play{width:32px;height:32px;left:12px;top:12px;}
+  .slider-counter{right:12px;top:12px;font-size:11px;padding:4px 10px;}
+  .slide-tag{left:16px;bottom:16px;}
+  .slide-tag strong{font-size:14px;}
+  .slide-tag span{font-size:11.5px;}
+  .slide-num{right:16px;bottom:16px;font-size:11px;}
+  .thumb{width:70px;}
+  .wd-meta-grid{gap:20px 24px;}
+}
+@media (min-width:961px){
+  .sidebar{transform:none !important;}
+  .overlay{display:none;}
+}
+@media (max-width:420px){
+  .footer-list{grid-template-columns:1fr;}
+  .hero-stats{gap:28px;}
+  .device-grid{grid-template-columns:1fr 1fr;gap:12px;}
+  .device-card{padding:10px 10px 14px;}
+  .device-name{font-size:13px;}
+  .device-sub{font-size:11.5px;}
+}
+</style>
+</head>
+<body>
+
+<!-- 汉堡菜单 -->
+<button class="menu-btn" id="menuBtn" aria-label="打开导航菜单">
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+    <path d="M4 7h16M4 12h16M4 17h16"/>
+  </svg>
+</button>
+<div class="overlay" id="overlay"></div>
+
+<!-- =========================================================
+     左侧导航栏
+     ========================================================= -->
+<aside class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="brand-mark">C</div>
+    <div>
+      <span class="brand-name">CRAZIFAN</span>
+      <span class="brand-sub">摄影约拍工作室</span>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <span class="nav-label">目录</span>
+    <a class="nav-item active" href="#works"   data-target="works"><span class="nav-idx">01</span>作品参考</a>
+    <a class="nav-item"        href="#pricing" data-target="pricing"><span class="nav-idx">02</span>收费标准</a>
+    <a class="nav-item"        href="#gear"    data-target="gear"><span class="nav-idx">03</span>设备详情</a>
+    <a class="nav-item"        href="#team"    data-target="team"><span class="nav-idx">04</span>服务队伍</a>
+  </nav>
+
+  <div class="sidebar-foot">
+    <div class="contact">预约咨询<strong>181 6090 8811</strong></div>
+    <a class="cta" href="#contact">立即预约</a>
+  </div>
+</aside>
+
+<!-- =========================================================
+     右侧主内容区
+     ========================================================= -->
+<main class="main">
+
+  <!-- 顶部搜索区 -->
+  <div class="searchbar">
+    <div class="searchbar-inner">
+      <div class="search-field">
+        <svg class="sf-icon" viewBox="0 0 24 24" width="18" height="18" fill="none"
+             stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/>
+        </svg>
+        <input id="searchInput" type="text" autocomplete="off" spellcheck="false"
+               placeholder="搜索作品、收费、设备、团队…">
+        <button class="search-clear" id="clearBtn" aria-label="清除搜索">✕</button>
+        <kbd class="search-kbd">/</kbd>
+      </div>
+      <div class="search-panel" id="searchPanel" role="listbox" aria-label="搜索结果"></div>
+    </div>
+  </div>
+
+  <div class="main-inner">
+
+    <!-- Hero -->
+    <header class="hero">
+      <span class="eyebrow">CRAZIFAN · EST. 2021 · 武汉 · 全国可约</span>
+      <h1>把每一次相遇，<br>拍成值得收藏的光</h1>
+      <p>Crazifan 是一家专注人像与情侣影像的约拍工作室。从拍摄、引导到后期修图，我们提供完整的影像服务，也接受校园活动、聚会跟拍等项目。</p>
+      <div class="hero-stats">
+        <div><strong>10+</strong><span>累计拍摄客户</span></div>
+        <div><strong>5+</strong><span>团队人数</span></div>
+        <div><strong>5 年</strong><span>摄影经验</span></div>
+      </div>
+    </header>
+
+    <!-- 01 作品参考 -->
+    <section class="section" id="works" data-name="作品参考">
+      <div class="section-head">
+        <span class="eyebrow">01 — PORTFOLIO</span>
+        <h2>作品参考</h2>
+        <p>点击任意卡片进入作品集二级页面，再点击具体作品可查看完整组图，支持左右滑动播放。所有样片均为工作室实拍。</p>
+      </div>
+      <div class="grid" id="worksGrid"></div>
+    </section>
+
+    <!-- 02 收费标准 -->
+    <section class="section" id="pricing" data-name="收费标准">
+      <div class="section-head">
+        <span class="eyebrow">02 — PRICING</span>
+        <h2>收费标准</h2>
+        <p>点击任意套餐卡片进入服务详情页，查看完整服务项目与拍摄流程。所有套餐均不包含妆造化妆，统一邮箱交付、4 个工作日完成。</p>
+      </div>
+      <div class="grid" id="pricingGrid"></div>
+    </section>
+
+    <!-- 03 设备详情 -->
+    <section class="section" id="gear" data-name="设备详情">
+      <div class="section-head">
+        <span class="eyebrow">03 — EQUIPMENT</span>
+        <h2>设备详情</h2>
+        <p>相机机身、镜头群与胶片设备三大类，点击任意卡片可查看设备图像与完整参数信息。</p>
+      </div>
+      <div class="grid" id="gearGrid"></div>
+    </section>
+
+    <!-- 04 服务队伍 -->
+    <section class="section" id="team" data-name="服务队伍">
+      <div class="section-head">
+        <span class="eyebrow">04 — TEAM</span>
+        <h2>服务队伍</h2>
+        <p>一支精干的小团队，主理人与资深摄影师配合，覆盖拍摄、引导、后期全流程，不外包、不临时拼凑。</p>
+      </div>
+      <div class="grid" id="teamGrid"></div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="site-footer" id="contact">
+      <div class="footer-grid">
+        <div>
+          <span class="eyebrow">CONTACT</span>
+          <h2>预约与合作</h2>
+          <p>档期一般需提前 3–7 天预约；旅拍与活动项目建议提前沟通方案与场地，我们会给出完整的时间与报价表。</p>
+        </div>
+        <div class="footer-list">
+          <div><span>预约电话</span><strong>181 6090 8811</strong></div>
+          <div><span>微信 / 企业微信</span><strong>964193677</strong></div>
+          <div><span>邮箱</span><strong>964193677@qq.com</strong></div>
+          <div><span>工作室地址</span><strong>武汉市 · 中南财经政法大学</strong></div>
+        </div>
+      </div>
+      <p class="copyright">© 2025 CRAZIFAN 摄影约拍工作室 · 保留所有权利</p>
+    </footer>
+
+  </div>
+</main>
+
+<!-- =========================================================
+     二级页面 1：作品集
+     ========================================================= -->
+<div class="subpage" id="subpage" aria-hidden="true">
+  <div class="subpage-inner">
+    <header class="subpage-head">
+      <button class="back-btn" data-close>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 5l-7 7 7 7"/>
+        </svg>
+        返回主页
+      </button>
+      <div class="subpage-title">
+        <span class="eyebrow">PORTFOLIO</span>
+        <h2 id="subTitle">全部作品</h2>
+      </div>
+      <span class="subpage-count" id="subCount"></span>
+    </header>
+
+    <div class="sub-tabs" id="subTabs"></div>
+    <div class="sub-grid" id="subGrid"></div>
+  </div>
+</div>
+
+<!-- =========================================================
+     三级页面：单组作品 · 滑动播放
+     ========================================================= -->
+<div class="subpage" id="workDetail" aria-hidden="true">
+  <div class="subpage-inner">
+    <header class="subpage-head">
+      <button class="back-btn" data-close>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 5l-7 7 7 7"/>
+        </svg>
+        返回作品集
+      </button>
+      <div class="subpage-title">
+        <span class="eyebrow" id="wdEyebrow">PORTFOLIO</span>
+        <h2 id="wdTitle">作品详情</h2>
+      </div>
+      <span class="subpage-count" id="wdCount"></span>
+    </header>
+
+    <div class="slider">
+      <div class="slider-stage" id="sliderStage">
+        <div class="slider-track" id="sliderTrack"></div>
+
+        <button class="slider-nav prev" id="sliderPrev" aria-label="上一张">‹</button>
+        <button class="slider-nav next" id="sliderNext" aria-label="下一张">›</button>
+
+        <div class="slider-counter">
+          <span id="sliderCur">1</span> / <span id="sliderTotal">6</span>
+        </div>
+
+        <button class="slider-play" id="sliderPlay" aria-label="暂停自动播放">
+          <svg class="ico-pause" viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+            <rect x="6.5" y="5" width="3.6" height="14" rx="1.2"/>
+            <rect x="13.9" y="5" width="3.6" height="14" rx="1.2"/>
+          </svg>
+          <svg class="ico-play" viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+            <path d="M8 5.6v12.8a1 1 0 0 0 1.5.86l10-6.4a1 1 0 0 0 0-1.72l-10-6.4A1 1 0 0 0 8 5.6z"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="slider-thumbs" id="sliderThumbs"></div>
+    </div>
+
+    <div class="wd-meta" id="wdMeta"></div>
+  </div>
+</div>
+
+<!-- =========================================================
+     二级页面 2：设备详情
+     ========================================================= -->
+<div class="subpage" id="gearPage" aria-hidden="true">
+  <div class="subpage-inner">
+    <header class="subpage-head">
+      <button class="back-btn" data-close>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 5l-7 7 7 7"/>
+        </svg>
+        返回主页
+      </button>
+      <div class="subpage-title">
+        <span class="eyebrow">EQUIPMENT</span>
+        <h2>设备详情</h2>
+      </div>
+      <span class="subpage-count">共 3 大类 · 11 台设备</span>
+    </header>
+
+    <div class="gear-intro">
+      <p>机身、镜头与胶片设备均为 Crazifan 工作室自有资产，定期维护校准。点击任意设备卡片，可查看设备图像与完整参数信息。</p>
+    </div>
+
+    <div id="gearCatList"></div>
+  </div>
+</div>
+
+<!-- =========================================================
+     三级浮层：单台设备详情
+     ========================================================= -->
+<div class="subpage" id="deviceDetail" aria-hidden="true">
+  <div class="subpage-inner">
+    <header class="subpage-head">
+      <button class="back-btn" data-close>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 5l-7 7 7 7"/>
+        </svg>
+        返回设备列表
+      </button>
+      <div class="subpage-title">
+        <span class="eyebrow" id="ddEyebrow">EQUIPMENT</span>
+        <h2 id="ddTitle">设备详情</h2>
+      </div>
+    </header>
+    <div id="ddContent"></div>
+  </div>
+</div>
+
+<!-- =========================================================
+     二级页面 3：收费标准 · 服务详情
+     ========================================================= -->
+<div class="subpage" id="pricingPage" aria-hidden="true">
+  <div class="subpage-inner">
+    <header class="subpage-head">
+      <button class="back-btn" data-close>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 5l-7 7 7 7"/>
+        </svg>
+        返回主页
+      </button>
+      <div class="subpage-title">
+        <span class="eyebrow">PRICING · DETAIL</span>
+        <h2>收费标准 · 服务详情</h2>
+      </div>
+      <span class="subpage-count">共 4 档套餐</span>
+    </header>
+
+    <div class="sub-tabs" id="pricingTabs"></div>
+    <div id="pricingDetail"></div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   1. 图标库
+   ========================================================= */
+const ICONS = {
+  user:     '<circle cx="12" cy="8" r="3.6"/><path d="M4.8 19.6c1.2-3.4 3.9-5.1 7.2-5.1s6 1.7 7.2 5.1"/>',
+  heart:    '<path d="M12 20.3 4.9 13.4A4.6 4.6 0 0 1 12 7.4a4.6 4.6 0 0 1 7.1 6z"/>',
+  camera:   '<path d="M3 8.8A2.8 2.8 0 0 1 5.8 6h1.6l1.2-2h6.8l1.2 2h1.6A2.8 2.8 0 0 1 21 8.8v8.4A2.8 2.8 0 0 1 18.2 20H5.8A2.8 2.8 0 0 1 3 17.2z"/><circle cx="12" cy="13" r="3.6"/>',
+  map:      '<path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/>',
+  tag:      '<path d="M6.5 8h11l1 12h-13z"/><path d="M9.5 8V6.2a2.5 2.5 0 0 1 5 0V8"/>',
+  aperture: '<circle cx="12" cy="12" r="8.6"/><circle cx="12" cy="12" r="3.4"/><path d="M12 3.4v5.2M20.6 12h-5.2M12 20.6v-5.2M3.4 12h5.2"/>',
+  flash:    '<path d="M13.4 3 6 13.6h5.2L10.6 21 18 10.4h-5.2z"/>',
+  monitor:  '<rect x="3" y="4" width="18" height="12.5" rx="2.2"/><path d="M8.5 20.5h7M12 16.5v4"/>',
+  brush:    '<path d="M14.6 4.4 19.6 9.4 9.2 19.8H4.2v-5z"/><path d="M12.6 6.4 17.6 11.4"/>',
+  group:    '<circle cx="9.2" cy="8.6" r="3.2"/><path d="M3.6 19c.8-3 3-4.6 5.6-4.6s4.8 1.6 5.6 4.6"/><path d="M16.2 6.3a3 3 0 0 1 0 5.6M18.4 18.6c-.3-1.6-1-2.9-2.1-3.8"/>',
+  clock:    '<rect x="3.6" y="5" width="16.8" height="15.4" rx="2.6"/><path d="M3.6 10h16.8M8.2 3.2v3.4M15.8 3.2v3.4"/>',
+  disk:     '<rect x="3" y="5" width="18" height="6" rx="2"/><rect x="3" y="13" width="18" height="6" rx="2"/><path d="M7 8h.01M7 16h.01"/>',
+  film:     '<rect x="3" y="5" width="18" height="14" rx="2.4"/><path d="M7 5v14M17 5v14M3 9h4M3 15h4M17 9h4M17 15h4"/>',
+  sparkle:  '<path d="M12 3.4 13.8 9l5.6 1.8-5.6 1.8L12 20.6l-1.8-8-5.6-1.8L10.2 9z"/>',
+  check:    '<path d="M5 12.6 9.6 17 19 7.4"/>',
+  event:    '<rect x="3" y="5" width="18" height="16" rx="2.4"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="m9 15 2 2 4-4"/>'
+};
+
+function icon(name, size = 22){
+  return `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none"
+    stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICONS[name] || ''}</svg>`;
+}
+
+/* =========================================================
+   2. 数据层
+   ========================================================= */
+const CAT_NAMES = {
+  portrait: '人像写真',
+  couple:   '情侣 · 婚纱'
+};
+
+const CAT_ICON = {
+  portrait: 'user',
+  couple:   'heart'
+};
+
+const worksData = [
+  { cat:'portrait', icon:'user',  title:'人像写真',   desc:'自然光与情绪捕捉，涵盖日系、复古、都市夜景等多种风格。', tag:'5 组作品' },
+  { cat:'couple',   icon:'heart', title:'情侣 · 婚纱', desc:'从日常街拍到海边婚纱，用叙事镜头记录两个人的相处状态。', tag:'1 组作品' }
+];
+
+/* =========================================================
+   ★★★ 图片路径集中区 ★★★
+   ---------------------------------------------------------
+   把你的图片放到和 HTML 同一文件夹下的 images/ 目录中，
+   文件名按下面写好的英文名一一对应即可。
+   想换图，直接替换对应文件名的图片，无需改代码。
+   ========================================================= */
+
+/* —— 作品集样片（每项 6 张，在三级页面滑动播放） —— */
+const galleryData = [
+  {
+    cat:'portrait', title:'午后 · 自然光写真', meta:'2024 · 武汉 · 50mm F1.8',
+    cover:"url('images/work-portrait-1.jpg')",
+    note:'午后三点到四点半的斜射光，通过白色反光板补面部阴影，50mm 中长焦压缩背景，让杂乱的校园环境退成柔和的色块。'
+  },
+  {
+    cat:'portrait', title:'夜色 · 城市人像', meta:'2024 · 武汉 · 35mm F1.4',
+    cover:"url('images/work-portrait-2.jpg')",
+    note:'拍摄于武汉老城区入夜后的两小时，利用街灯与便利店霓虹混合光源，35mm 焦段保留环境的呼吸感，让人物与城市同时存在于画面之中。'
+  },
+  {
+    cat:'portrait', title:'室内 · 情绪肖像', meta:'2024 · 影棚 · 中画幅',
+    cover:"url('images/work-portrait-3.jpg')",
+    note:'影棚单灯加 90cm 八角柔光箱，从侧后方四十五度打光塑造面部轮廓，浅景深把背景完全虚化成均匀的灰调。'
+  },
+  {
+    cat:'portrait', title:'胶片感 · 街头随拍', meta:'2023 · 武汉 · 58mm F2',
+    cover:"url('images/work-portrait-4.jpg')",
+    note:'全程自然光、无补光，靠走位与等待捕捉瞬间。后期按胶片曲线调整高光与暗部，保留轻微颗粒，模拟 Portra 400 的质感。'
+  },
+  {
+    cat:'portrait', title:'窗边 · 逆光肖像', meta:'2024 · 武汉 · 85mm F1.8',
+    cover:"url('images/work-portrait-5.jpg')",
+    note:'利用落地窗的逆光勾勒发丝轮廓，正面用反光板补光，85mm 中长焦压缩背景，让画面保持通透而不失层次。'
+  },
+  {
+    cat:'couple', title:'海边 · 婚纱纪实', meta:'2024 · 青岛 · 35mm · 50mm',
+    cover:"url('images/work-couple-1.jpg')",
+    note:'傍晚的黄金时段只有四十分钟，我们提前踩点确认了三个机位与光线走向。拍摄不喊口令，让两个人在沙滩上自然走动，摄影师跟在后面记录。'
+  }
+];
+
+/* —— 三级页面滑动播放的 6 张画面（按分类） —— */
+const CAT_SLIDES = {
+  portrait: [
+    "url('images/portrait-1.jpg')",
+    "url('images/portrait-2.jpg')",
+    "url('images/portrait-3.jpg')",
+    "url('images/portrait-4.jpg')",
+    "url('images/portrait-5.jpg')",
+    "url('images/portrait-6.jpg')"
+  ],
+  couple: [
+    "url('images/couple-1.jpg')",
+    "url('images/couple-2.jpg')",
+    "url('images/couple-3.jpg')",
+    "url('images/couple-4.jpg')",
+    "url('images/couple-5.jpg')",
+    "url('images/couple-6.jpg')"
+  ]
+};
+
+/* 滑动画面的场景标签 */
+const SLIDE_LABELS = ['封面', '环境', '特写', '细节', '情绪', '收尾'];
+
+/* —— 收费标准 —— */
+const pricingPlans = [
+  {
+    id:'basic', icon:'tag', title:'个人写真 · 基础版',
+    price:'109', unit:'起 / 套', tag:'入门首选',
+    summary:'30 分钟拍摄 / 1 个场景 / 10 张精修 / 全部原片',
+    cover:"url('images/plan-basic.jpg')",
+    intro:'适合初次约拍、想要一组自然感日常写真的客户。30 分钟内完成一个场景的完整拍摄，节奏轻松不赶。',
+    suitable:'日常记录 / 社交头像 / 毕业纪念',
+    delivery:'邮箱文件发送，精修含基础调色与皮肤修饰',
+    includes:[
+      '30 分钟拍摄时长','1 个拍摄场景','10 张精修成片','全部拍摄原片',
+      '不包含妆造与化妆','邮箱文件发送','4 个工作日交付','1 次免费微调'
+    ]
+  },
+  {
+    id:'pro', icon:'sparkle', title:'个人写真 · 进阶版',
+    price:'199', unit:'起 / 套', tag:'最受欢迎',
+    summary:'1 小时拍摄 / 2 个场景 / 20 张精修 / 全部原片',
+    cover:"url('images/plan-pro.jpg')",
+    intro:'在基础版之上增加拍摄时长与场景数量，适合想要一组风格层次更丰富的写真客户。',
+    suitable:'风格探索 / 个人作品集 / 生日纪念',
+    delivery:'邮箱文件发送，精修含调色与皮肤修饰',
+    includes:[
+      '1 小时拍摄时长','2 个拍摄场景','20 张精修成片','全部拍摄原片',
+      '不包含妆造与化妆','邮箱文件发送','4 个工作日交付','2 次免费微调'
+    ]
+  },
+  {
+    id:'couple', icon:'heart', title:'情侣 / 闺蜜约拍',
+    price:'299', unit:'起 / 套', tag:'双人套餐',
+    summary:'1 小时拍摄 / 2 个场景 / 25 张精修 / 全部原片',
+    cover:"url('images/plan-couple.jpg')",
+    intro:'为两个人设计的拍摄节奏，摄影师会引导自然互动，避免僵硬摆拍，成片更像一段被记录下来的日常。',
+    suitable:'情侣纪念 / 闺蜜写真 / 领证跟拍',
+    delivery:'邮箱文件发送，双人拍摄与 2 个场景',
+    includes:[
+      '1 小时拍摄时长','2 个拍摄场景','25 张精修成片','全部拍摄原片',
+      '不包含妆造与化妆','邮箱文件发送','4 个工作日交付','2 次免费微调'
+    ]
+  },
+  {
+    id:'event', icon:'event', title:'活动跟拍',
+    price:'399', unit:'起 / 场', tag:'校园 / 聚会',
+    summary:'2 小时跟拍 / 不限场景 / 30 张精修 / 全部原片',
+    cover:"url('images/plan-event.jpg')",
+    intro:'适合校园活动、社团聚会、生日派对等场景。摄影师全程跟随记录，抓拍现场的真实状态与互动瞬间。',
+    suitable:'校园活动 / 社团聚会 / 生日派对',
+    delivery:'邮箱文件发送，含现场抓拍与合影',
+    includes:[
+      '2 小时跟拍时长','不限拍摄场景','30 张精修成片','全部拍摄原片',
+      '不包含妆造与化妆','邮箱文件发送','4 个工作日交付','2 次免费微调'
+    ]
+  }
+];
+
+/* —— 服务流程 —— */
+const SERVICE_FLOW = [
+  { n:'01', t:'需求沟通', d:'添加微信，说明拍摄类型、人数、期望风格与可用时间。' },
+  { n:'02', t:'方案确认', d:'我们给出档期、场地建议与报价方案，确认后支付 30% 定金锁定档期。' },
+  { n:'03', t:'拍摄准备', d:'拍摄前 1–2 天确认服装、集合地点与时间，并提供拍摄小贴士。' },
+  { n:'04', t:'正式拍摄', d:'摄影师全程跟进，按方案推进，现场可随时沟通调整。' },
+  { n:'05', t:'后期交付', d:'4 个工作日内完成精修，邮箱文件发送，支持 1 次免费微调。' }
+];
+
+/* —— 设备分类与设备详情 —— */
+const gearCategories = [
+  {
+    id:'body', icon:'camera', title:'相机机身',
+    desc:'从全画幅单反到 CCD 便携机，覆盖人像、街拍与复古质感三类拍摄场景。',
+    items:[
+      {
+        name:'Canon 5D Mark III', badge:'主力机身', icon:'camera',
+        img:"url('images/gear-canon-5d.jpg')",
+        sub:'2230 万像素 · 全画幅单反',
+        desc:'工作室人像拍摄的主力机型，2230 万像素全画幅传感器配合 61 点自动对焦系统，在自然光与弱光环境下都能稳定出片。',
+        specs:[
+          ['传感器','2230 万像素 全画幅 CMOS'],
+          ['影像处理器','DIGIC 5+'],
+          ['对焦系统','61 点高密度网状自动对焦'],
+          ['连拍速度','6 fps'],
+          ['ISO 范围','100–25600（可扩展至 102400）'],
+          ['视频规格','1080p 30fps'],
+          ['取景器','100% 视野率光学取景器'],
+          ['存储','CF + SD 双卡槽']
+        ]
+      },
+      {
+        name:'Sony NEX-7', badge:'微单机身', icon:'camera',
+        img:"url('images/gear-sony-nex7.jpg')",
+        sub:'2430 万像素 · APS-C 微单',
+        desc:'轻便的 APS-C 微单机身，2430 万像素传感器与 236 万点电子取景器，适合旅拍与外景机动拍摄。',
+        specs:[
+          ['传感器','2430 万像素 APS-C Exmor CMOS'],
+          ['影像处理器','BIONZ'],
+          ['对焦系统','25 点对比度检测 AF'],
+          ['连拍速度','10 fps'],
+          ['ISO 范围','100–16000'],
+          ['视频规格','1080p 60p'],
+          ['取景器','236 万点 OLED 电子取景器'],
+          ['存储','SD / SDHC / SDXC + Memory Stick']
+        ]
+      },
+      {
+        name:'Sony DSC-W170 (CCD)', badge:'CCD 便携', icon:'camera',
+        img:"url('images/gear-sony-w170.jpg')",
+        sub:'1010 万像素 · CCD 卡片机',
+        desc:'经典 CCD 传感器卡片机，成像色彩浓郁、直出带有独特的复古氛围，适合日常街拍与怀旧质感项目。',
+        specs:[
+          ['传感器','1010 万像素 1/2.3" Super HAD CCD'],
+          ['镜头','Carl Zeiss Vario-Tessar 5 倍光学变焦'],
+          ['等效焦距','28–140mm'],
+          ['最大光圈','F3.3–5.2'],
+          ['显示屏','2.7 英寸 LCD'],
+          ['ISO 范围','80–3200'],
+          ['存储','Memory Stick Duo / PRO Duo'],
+          ['特点','CCD 色彩浓郁 / 直出胶片感']
+        ]
+      },
+      {
+        name:'Rewindpix', badge:'复古数码', icon:'camera',
+        img:"url('images/gear-rewindpix.jpg')",
+        sub:'复古数码相机 · 直出胶片风格',
+        desc:'一台主打复古成像的便携数码相机，直出色彩带有明显的胶片颗粒与暖色调，适合日常记录与氛围感拍摄。',
+        specs:[
+          ['类型','复古便携数码相机'],
+          ['传感器','CCD 风格传感器'],
+          ['镜头','定焦 35mm 等效'],
+          ['最大光圈','F2.8'],
+          ['显示屏','2.5 英寸 LCD'],
+          ['存储','SD 卡'],
+          ['特点','直出色彩浓郁 / 复古颗粒感'],
+          ['适用','日常街拍 / 旅拍备用机']
+        ]
+      }
+    ]
+  },
+  {
+    id:'lens', icon:'aperture', title:'镜头群',
+    desc:'覆盖 18mm 广角到 135mm 中长焦，从变焦挂机到定焦人像与经典胶片镜头一应俱全。',
+    items:[
+      {
+        name:'Canon EF 28-135mm f/3.5-5.6 IS USM', badge:'挂机变焦', icon:'aperture',
+        img:"url('images/gear-canon-28-135.jpg')",
+        sub:'28-135mm · 带防抖挂机头',
+        desc:'最常用的挂机变焦镜头，覆盖广角到中长焦常用焦段，带 IS 光学防抖，适合旅拍与外景机动拍摄。',
+        specs:[
+          ['焦段','28-135mm'],
+          ['最大光圈','F3.5–5.6'],
+          ['光学结构','12 组 16 片'],
+          ['最近对焦距离','0.5m'],
+          ['滤镜口径','72mm'],
+          ['重量','约 540g'],
+          ['特色','IS 光学防抖 / USM 超声波马达'],
+          ['适用','旅拍 / 日常挂机']
+        ]
+      },
+      {
+        name:'Canon EF 50mm f/1.8', badge:'人像定焦', icon:'aperture',
+        img:"url('images/gear-canon-50.jpg')",
+        sub:'F1.8 大光圈 · 标准人像',
+        desc:'性价比极高的标准定焦镜头，F1.8 大光圈带来柔和虚化，轻便小巧，是人像拍摄的高频使用镜头。',
+        specs:[
+          ['焦段','50mm'],
+          ['最大光圈','F1.8'],
+          ['光学结构','5 组 6 片'],
+          ['光圈叶片','7 片'],
+          ['最近对焦距离','0.45m'],
+          ['滤镜口径','52mm'],
+          ['重量','约 160g'],
+          ['特色','轻便小巧 / 高性价比']
+        ]
+      },
+      {
+        name:'Helios 44-2 58mm f/2', badge:'经典胶片头', icon:'aperture',
+        img:"url('images/gear-helios-44-2.jpg')",
+        sub:'58mm F2 · 经典旋焦',
+        desc:'前苏联经典胶片镜头，58mm 焦段配合 F2 大光圈，焦外带有标志性的旋转虚化，适合打造独特氛围感。',
+        specs:[
+          ['焦段','58mm'],
+          ['最大光圈','F2'],
+          ['光学结构','4 组 6 片（双高斯结构）'],
+          ['光圈叶片','8 片'],
+          ['最近对焦距离','0.5m'],
+          ['滤镜口径','52mm'],
+          ['卡口','M42 螺纹卡口（可转接）'],
+          ['特色','经典旋焦 / 焦外氛围感强']
+        ]
+      },
+      {
+        name:'Sony 18-55mm f/3.5-5.6 OSS', badge:'APS-C 变焦', icon:'aperture',
+        img:"url('images/gear-sony-18-55.jpg')",
+        sub:'18-55mm · 带防抖套机头',
+        desc:'NEX-7 的配套变焦镜头，等效 27-82mm 覆盖日常焦段，带 OSS 光学防抖，轻便适合外景随拍。',
+        specs:[
+          ['焦段','18-55mm（等效 27-82mm）'],
+          ['最大光圈','F3.5–5.6'],
+          ['光学结构','9 组 11 片'],
+          ['最近对焦距离','0.25m'],
+          ['滤镜口径','49mm'],
+          ['重量','约 194g'],
+          ['特色','OSS 光学防抖 / 轻便'],
+          ['适用','旅拍 / 日常挂机']
+        ]
+      }
+    ]
+  },
+  {
+    id:'film', icon:'film', title:'胶片设备',
+    desc:'三台经典胶片机型，涵盖 135 紧凑机与半格机，用于胶片质感拍摄与复古项目。',
+    items:[
+      {
+        name:'Rollei 35', badge:'经典紧凑机', icon:'film',
+        img:"url('images/gear-rollei-35.jpg')",
+        sub:'135 胶片 · 40mm F3.5',
+        desc:'禄来经典紧凑型 135 胶片相机，全机械结构、体积小巧，40mm Tessar 镜头素质出众，适合街拍与随身记录。',
+        specs:[
+          ['画幅','135 全画幅'],
+          ['镜头','Carl Zeiss Tessar 40mm F3.5'],
+          ['快门','机械镜间快门 1/2–1/500s'],
+          ['对焦','手动估焦'],
+          ['取景器','光学取景器'],
+          ['测光','外置指针式测光表'],
+          ['机身材质','铝合金机身'],
+          ['特点','极小巧 / 全机械可靠']
+        ]
+      },
+      {
+        name:'Pentax SP', badge:'经典单反', icon:'film',
+        img:"url('images/gear-pentax-sp.jpg')",
+        sub:'135 胶片 · M42 卡口',
+        desc:'宾得 Spotmatic 系列经典单反，M42 螺纹卡口可转接多种老镜头，全机械结构可靠耐用，是胶片入门的经典选择。',
+        specs:[
+          ['画幅','135 全画幅'],
+          ['卡口','M42 螺纹卡口'],
+          ['快门','机械焦平面快门 1–1/1000s'],
+          ['对焦','手动对焦 / 微棱对焦屏'],
+          ['测光','CdS 中央重点测光（TTL）'],
+          ['取景器','眼平五棱镜取景器'],
+          ['机身重量','约 620g（不含镜头）'],
+          ['特点','全机械 / 可转接多种镜头']
+        ]
+      },
+      {
+        name:'Olympus Pen', badge:'半格胶片', icon:'film',
+        img:"url('images/gear-olympus-pen.jpg')",
+        sub:'135 半格 · 一卷 72 张',
+        desc:'奥林巴斯 Pen 系列半格胶片相机，一张底片拍两张画面，一卷胶卷可拍出约 72 张，适合叙事性强的日常记录。',
+        specs:[
+          ['画幅','135 半格（18×24mm）'],
+          ['镜头','D.Zuiko 28mm F3.5（等效 40mm）'],
+          ['快门','机械镜间快门 1/8–1/500s'],
+          ['对焦','手动估焦'],
+          ['取景器','光学取景器'],
+          ['测光','无（需外置测光或估光）'],
+          ['胶卷张数','一卷约 72 张'],
+          ['特点','体积小巧 / 叙事感强']
+        ]
+      }
+    ]
+  }
+];
+
+/* —— 服务队伍 —— */
+const teamData = [
+  {
+    icon:'user',
+    title:'陈泽 · 主理人 / 摄影师',
+    desc:'4 年摄影经验，擅长自然光与情绪人像，主要负责拍摄与后期。习惯在拍摄前与客户充分沟通，把当天的光线、场地与服装整体想清楚，再开始按快门。后期坚持保留真实质感，不做过度磨皮，让成片既干净又不失细节。',
+    href:'https://example.com/team/chenze'
+  },
+  {
+    icon:'camera',
+    title:'范钦欣 · 资深摄影师',
+    desc:'资深摄影师，主要负责拍摄与现场引导。擅长在镜头前帮客户放松下来，用聊天和走位代替口令，让不会摆姿势的人也能拍出自然的状态。对光线与构图有自己的判断，能在拍摄现场快速找到最好的角度与时机。',
+    href:'https://example.com/team/fanqinxin'
+  }
+];
+
+/* =========================================================
+   3. 渲染主页面
+   ========================================================= */
+function cardHTML(c){
+  return `
+    <a class="card" href="${c.href}" target="_blank" rel="noopener noreferrer">
+      <div class="card-icon">${icon(c.icon)}</div>
+      <div class="card-body">
+        <div class="card-top">
+          <h3>${c.title}</h3>
+          <span class="card-arrow">↗</span>
+        </div>
+        <p>${c.desc}</p>
+      </div>
+    </a>`;
+}
+
+document.getElementById('worksGrid').innerHTML = worksData.map(w => `
+  <a class="card" href="#gallery" data-gallery="${w.cat}">
+    <div class="card-icon">${icon(w.icon)}</div>
+    <div class="card-body">
+      <div class="card-top">
+        <h3>${w.title}</h3>
+        <span class="card-arrow">↗</span>
+      </div>
+      <p>${w.desc}</p>
+      <span class="card-tag">${w.tag} · 进入作品集</span>
+    </div>
+  </a>`).join('');
+
+document.getElementById('pricingGrid').innerHTML = pricingPlans.map(p => `
+  <a class="card" href="#pricingDetail" data-pricing="${p.id}">
+    <div class="card-icon">${icon(p.icon)}</div>
+    <div class="card-body">
+      <div class="card-top">
+        <h3>${p.title}</h3>
+        <span class="card-price">¥${p.price}</span>
+      </div>
+      <p>${p.summary}</p>
+      <span class="card-tag">${p.tag} · 查看服务详情</span>
+    </div>
+  </a>`).join('');
+
+document.getElementById('gearGrid').innerHTML = gearCategories.map(c => `
+  <a class="card" href="#equipment" data-gear="${c.id}">
+    <div class="card-icon">${icon(c.icon)}</div>
+    <div class="card-body">
+      <div class="card-top">
+        <h3>${c.title}</h3>
+        <span class="card-arrow">↗</span>
+      </div>
+      <p>${c.desc}</p>
+      <span class="card-tag">${c.items.length} 台设备 · 查看参数</span>
+    </div>
+  </a>`).join('');
+
+document.getElementById('teamGrid').innerHTML = teamData.map(cardHTML).join('');
+
+/* 空状态 */
+document.querySelectorAll('.section').forEach(sec => {
+  const grid = sec.querySelector('.grid');
+  if (!grid) return;
+  const empty = document.createElement('div');
+  empty.className = 'empty-state';
+  empty.innerHTML = '<strong>没有找到相关内容</strong><span>换个关键词试试，或清空搜索查看全部内容。</span>';
+  grid.insertAdjacentElement('afterend', empty);
+});
+
+/* =========================================================
+   4. 侧边栏 / 移动端抽屉
+   ========================================================= */
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('overlay');
+const menuBtn = document.getElementById('menuBtn');
+
+function openSidebar(){
+  sidebar.classList.add('open');
+  overlay.classList.add('show');
+}
+function closeSidebar(){
+  sidebar.classList.remove('open');
+  overlay.classList.remove('show');
+}
+menuBtn.addEventListener('click', () => {
+  sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+});
+overlay.addEventListener('click', closeSidebar);
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 960) closeSidebar();
+});
+
+/* =========================================================
+   5. 滚动监听 + 点击定位
+   ========================================================= */
+const sections = Array.from(document.querySelectorAll('.section'));
+const navItems = Array.from(document.querySelectorAll('.nav-item'));
+
+function setActive(id){
+  navItems.forEach(item => {
+    item.classList.toggle('active', item.dataset.target === id);
+  });
+}
+
+navItems.forEach(item => {
+  item.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.getElementById(item.dataset.target);
+    if (!target) return;
+    target.scrollIntoView({ behavior:'smooth', block:'start' });
+    setActive(item.dataset.target);
+    closeSidebar();
+  });
+});
+
+let ticking = false;
+function onScroll(){
+  const pos = window.pageYOffset + 160;
+  let current = sections[0].id;
+
+  sections.forEach(sec => {
+    if (sec.offsetTop <= pos) current = sec.id;
+  });
+
+  if (window.innerHeight + window.pageYOffset >= document.documentElement.scrollHeight - 8){
+    current = sections[sections.length - 1].id;
+  }
+  setActive(current);
+  ticking = false;
+}
+window.addEventListener('scroll', () => {
+  if (!ticking){
+    window.requestAnimationFrame(onScroll);
+    ticking = true;
+  }
+}, { passive:true });
+onScroll();
+
+/* 页脚 CTA 平滑滚动 */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  if (a.dataset.gallery || a.dataset.pricing || a.dataset.gear) return;
+  if (a.classList.contains('nav-item')) return;
+  const id = a.getAttribute('href').slice(1);
+  if (!id) return;
+  const el = document.getElementById(id);
+  if (!el) return;
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    el.scrollIntoView({ behavior:'smooth', block:'start' });
+    closeSidebar();
+  });
+});
+
+/* =========================================================
+   6. 子页面层级管理
+   ========================================================= */
+const layerStack = [];
+
+function openLayer(el){
+  if (layerStack.includes(el)) return;
+  layerStack.push(el);
+  el.classList.add('open');
+  el.setAttribute('aria-hidden','false');
+  el.scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+
+  try {
+    history.pushState({ layer: layerStack.length }, '', '#' + el.id);
+  } catch(err){ /* 忽略 */ }
+}
+
+function closeTopLayer(){
+  const el = layerStack.pop();
+  if (!el) return;
+  el.classList.remove('open');
+  el.setAttribute('aria-hidden','true');
+  if (!layerStack.length) document.body.style.overflow = '';
+
+  if (el.id === 'workDetail') stopAuto();
+}
+
+document.querySelectorAll('.back-btn[data-close]').forEach(btn => {
+  btn.addEventListener('click', () => closeTopLayer());
+});
+
+window.addEventListener('popstate', () => {
+  if (layerStack.length) closeTopLayer();
+});
+
+/* =========================================================
+   7. 作品集二级页面
+   ========================================================= */
+const subpage  = document.getElementById('subpage');
+const subTabs  = document.getElementById('subTabs');
+const subGrid  = document.getElementById('subGrid');
+const subTitle = document.getElementById('subTitle');
+const subCount = document.getElementById('subCount');
+
+let currentCat = 'all';
+
+function renderTabs(){
+  const items = [{ cat:'all', title:'全部作品' }]
+    .concat(worksData.map(w => ({ cat:w.cat, title:w.title })));
+
+  subTabs.innerHTML = items.map(i =>
+    `<button class="sub-tab" data-cat="${i.cat}">${i.title}</button>`
+  ).join('');
+  setActiveTab(currentCat);
+}
+function setActiveTab(cat){
+  subTabs.querySelectorAll('.sub-tab').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.cat === cat);
+  });
+}
+function renderGallery(cat){
+  const list = (cat === 'all') ? galleryData : galleryData.filter(g => g.cat === cat);
+
+  subTitle.textContent = (cat === 'all') ? '全部作品' : CAT_NAMES[cat];
+  subCount.textContent = `共 ${list.length} 组样片`;
+
+  subGrid.innerHTML = list.map((g, i) => `
+    <a class="work" href="#work" data-title="${g.title}" style="animation-delay:${i * 45}ms">
+      <div class="work-thumb" style="background-image:${g.cover}">
+        <span class="work-cat">${CAT_NAMES[g.cat]}</span>
+        <span class="work-open">›</span>
+      </div>
+      <h4>${g.title}</h4>
+      <span>${g.meta} · 6 张</span>
+    </a>`).join('');
+}
+function openGallery(cat = 'all'){
+  currentCat = cat;
+  renderTabs();
+  renderGallery(cat);
+  openLayer(subpage);
+}
+
+subTabs.addEventListener('click', e => {
+  const btn = e.target.closest('.sub-tab');
+  if (!btn) return;
+  currentCat = btn.dataset.cat;
+  setActiveTab(currentCat);
+  renderGallery(currentCat);
+  subGrid.scrollIntoView({ behavior:'smooth', block:'start' });
+});
+
+subGrid.addEventListener('click', e => {
+  const el = e.target.closest('.work');
+  if (!el) return;
+  e.preventDefault();
+  openWorkDetail(el.dataset.title);
+});
+
+/* =========================================================
+   8. 作品三级页面 · 滑动播放
+   ========================================================= */
+const workDetail   = document.getElementById('workDetail');
+const wdEyebrow    = document.getElementById('wdEyebrow');
+const wdTitle      = document.getElementById('wdTitle');
+const wdCount      = document.getElementById('wdCount');
+const wdMeta       = document.getElementById('wdMeta');
+
+const sliderStage  = document.getElementById('sliderStage');
+const sliderTrack  = document.getElementById('sliderTrack');
+const sliderThumbs = document.getElementById('sliderThumbs');
+const sliderCur    = document.getElementById('sliderCur');
+const sliderTotal  = document.getElementById('sliderTotal');
+const sliderPrev   = document.getElementById('sliderPrev');
+const sliderNext   = document.getElementById('sliderNext');
+const sliderPlay   = document.getElementById('sliderPlay');
+
+const sliderState = { index:0, total:0, timer:null, paused:false };
+
+function renderSlider(g){
+  const imgs = CAT_SLIDES[g.cat] || CAT_SLIDES.portrait;
+  const parts = g.meta.split(' · ');
+  const metaLine = parts.slice(1).join(' · ');
+
+  sliderState.index = 0;
+  sliderState.total = imgs.length;
+  sliderState.paused = false;
+  sliderPlay.classList.remove('paused');
+  sliderPlay.setAttribute('aria-label','暂停自动播放');
+
+  sliderTrack.innerHTML = imgs.map((bg, i) => `
+    <div class="slide" style="background-image:${bg}">
+      <div class="slide-tag">
+        <strong>${g.title}</strong>
+        <span>${SLIDE_LABELS[i] || '画面'} · ${metaLine}</span>
+      </div>
+      <div class="slide-num">${String(i+1).padStart(2,'0')} / ${String(imgs.length).padStart(2,'0')}</div>
+    </div>`).join('');
+
+  sliderThumbs.innerHTML = imgs.map((bg, i) => `
+    <button class="thumb ${i === 0 ? 'active' : ''}" data-i="${i}"
+            style="background-image:${bg}" aria-label="查看第 ${i+1} 张">
+      <span class="thumb-num">${String(i+1).padStart(2,'0')}</span>
+    </button>`).join('');
+
+  sliderTotal.textContent = imgs.length;
+  updateSlider();
+
+  wdMeta.innerHTML = `
+    <div class="wd-meta-grid">
+      <div><span>拍摄年份</span><strong>${parts[0] || '—'}</strong></div>
+      <div><span>拍摄地点</span><strong>${parts[1] || '—'}</strong></div>
+      <div><span>使用器材</span><strong>${parts[2] || '—'}</strong></div>
+      <div><span>作品分类</span><strong>${CAT_NAMES[g.cat]}</strong></div>
+    </div>
+    <p class="wd-note">${g.note || ''}</p>`;
+}
+
+function updateSlider(){
+  sliderTrack.style.transform = `translateX(-${sliderState.index * 100}%)`;
+  sliderCur.textContent = sliderState.index + 1;
+  sliderThumbs.querySelectorAll('.thumb').forEach((t, i) => {
+    t.classList.toggle('active', i === sliderState.index);
+  });
+}
+
+function goTo(i){
+  if (!sliderState.total) return;
+  sliderState.index = (i + sliderState.total) % sliderState.total;
+  updateSlider();
+}
+function nextSlide(){ goTo(sliderState.index + 1); }
+function prevSlide(){ goTo(sliderState.index - 1); }
+
+function startAuto(){
+  stopAuto();
+  sliderState.timer = setInterval(() => {
+    if (!sliderState.paused && sliderState.total > 1) nextSlide();
+  }, 4200);
+}
+function stopAuto(){
+  if (sliderState.timer) clearInterval(sliderState.timer);
+  sliderState.timer = null;
+}
+
+function openWorkDetail(title){
+  const g = galleryData.find(x => x.title === title);
+  if (!g) return;
+
+  wdEyebrow.textContent = 'PORTFOLIO · ' + CAT_NAMES[g.cat];
+  wdTitle.textContent = g.title;
+  wdCount.textContent = '共 6 张 · 支持滑动';
+
+  renderSlider(g);
+  openLayer(workDetail);
+  startAuto();
+}
+
+sliderPrev.addEventListener('click', prevSlide);
+sliderNext.addEventListener('click', nextSlide);
+
+sliderThumbs.addEventListener('click', e => {
+  const t = e.target.closest('.thumb');
+  if (!t) return;
+  goTo(+t.dataset.i);
+});
+
+sliderPlay.addEventListener('click', () => {
+  sliderState.paused = !sliderState.paused;
+  sliderPlay.classList.toggle('paused', sliderState.paused);
+  sliderPlay.setAttribute('aria-label', sliderState.paused ? '继续自动播放' : '暂停自动播放');
+});
+
+sliderStage.addEventListener('mouseenter', () => { sliderState.paused = true; });
+sliderStage.addEventListener('mouseleave', () => { sliderState.paused = false; });
+
+let touchStartX = 0, touchStartY = 0, touching = false;
+sliderStage.addEventListener('touchstart', e => {
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+  touching = true;
+}, { passive:true });
+
+sliderStage.addEventListener('touchend', e => {
+  if (!touching) return;
+  touching = false;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  if (Math.abs(dx) > 46 && Math.abs(dx) > Math.abs(dy)){
+    dx < 0 ? nextSlide() : prevSlide();
+  }
+}, { passive:true });
+
+/* =========================================================
+   9. 设备二级页面 + 设备详情三级浮层
+   ========================================================= */
+const gearPage     = document.getElementById('gearPage');
+const gearCatList  = document.getElementById('gearCatList');
+const deviceDetail = document.getElementById('deviceDetail');
+const ddContent    = document.getElementById('ddContent');
+const ddTitle      = document.getElementById('ddTitle');
+const ddEyebrow    = document.getElementById('ddEyebrow');
+
+function renderGearPage(){
+  gearCatList.innerHTML = gearCategories.map(cat => `
+    <section class="gear-cat-block" id="gcat-${cat.id}">
+      <div class="gcat-head">
+        <div class="gcat-icon">${icon(cat.icon)}</div>
+        <div class="gcat-text">
+          <h3>${cat.title}</h3>
+          <p>${cat.desc}</p>
+        </div>
+        <span class="gcat-count">${cat.items.length} 台</span>
+      </div>
+      <div class="device-grid">
+        ${cat.items.map((item, idx) => `
+          <a class="device-card" href="#device" data-cat="${cat.id}" data-idx="${idx}">
+            <div class="device-img" style="background-image:${item.img}">
+              <span class="device-go">↗</span>
+            </div>
+            <div class="device-name">${item.name}</div>
+            <div class="device-sub">${item.sub}</div>
+            <span class="device-badge">${item.badge}</span>
+          </a>`).join('')}
+      </div>
+    </section>`).join('');
+}
+renderGearPage();
+
+function openGearPage(catId){
+  openLayer(gearPage);
+  if (catId){
+    setTimeout(() => {
+      const el = document.getElementById('gcat-' + catId);
+      if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+    }, 220);
+  }
+}
+
+gearCatList.addEventListener('click', e => {
+  const card = e.target.closest('.device-card');
+  if (!card) return;
+  e.preventDefault();
+  const cat = gearCategories.find(c => c.id === card.dataset.cat);
+  if (!cat) return;
+  const item = cat.items[+card.dataset.idx];
+  if (!item) return;
+
+  ddEyebrow.textContent = 'EQUIPMENT · ' + cat.title;
+  ddTitle.textContent = item.name;
+
+  ddContent.innerHTML = `
+    <div class="dd-grid">
+      <div class="dd-visual" style="background-image:${item.img}"></div>
+      <div class="dd-info">
+        <span class="dd-badge">${item.badge}</span>
+        <h3>${item.name}</h3>
+        <p>${item.desc}</p>
+        <dl class="spec-table">
+          ${item.specs.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}
+        </dl>
+      </div>
+    </div>`;
+
+  openLayer(deviceDetail);
+});
+
+/* =========================================================
+   10. 收费详情二级页面
+   ========================================================= */
+const pricingPage   = document.getElementById('pricingPage');
+const pricingTabs   = document.getElementById('pricingTabs');
+const pricingDetail = document.getElementById('pricingDetail');
+
+let currentPlan = 'basic';
+
+function renderPricing(planId){
+  const p = pricingPlans.find(x => x.id === planId) || pricingPlans[0];
+  currentPlan = p.id;
+
+  pricingTabs.innerHTML = pricingPlans.map(x =>
+    `<button class="sub-tab ${x.id === p.id ? 'active' : ''}" data-plan="${x.id}">${x.title}</button>`
+  ).join('');
+
+  pricingDetail.innerHTML = `
+    <div class="price-hero">
+      <div class="price-visual" style="background-image:${p.cover}">
+        <span class="pv-badge">${p.tag}</span>
+        <span class="pv-price"><strong>¥${p.price}</strong><span>${p.unit}</span></span>
+      </div>
+      <div class="price-info">
+        <span class="eyebrow">SERVICE DETAIL</span>
+        <h3>${p.title}</h3>
+        <p>${p.intro}</p>
+        <div class="price-meta">
+          <div><span>适合人群</span><strong>${p.suitable}</strong></div>
+          <div><span>交付方式</span><strong>${p.delivery}</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="price-block">
+      <h4>服务项目</h4>
+      <p class="block-sub">以下为该套餐包含的全部服务内容。所有套餐均不包含妆造与化妆，统一邮箱发送文件、4 个工作日交付。</p>
+      <ul class="inc-list">
+        ${p.includes.map(i => `<li>${i}</li>`).join('')}
+      </ul>
+    </div>
+
+    <div class="price-block">
+      <h4>服务流程</h4>
+      <p class="block-sub">从沟通到交付一共五个环节，每个环节我们都会主动同步进度。</p>
+      <ol class="flow">
+        ${SERVICE_FLOW.map(s => `
+          <li>
+            <span class="flow-num">${s.n}</span>
+            <strong>${s.t}</strong>
+            <p>${s.d}</p>
+          </li>`).join('')}
+      </ol>
+    </div>`;
+}
+
+function openPricingPage(planId){
+  renderPricing(planId || currentPlan);
+  openLayer(pricingPage);
+}
+
+pricingTabs.addEventListener('click', e => {
+  const btn = e.target.closest('.sub-tab');
+  if (!btn) return;
+  renderPricing(btn.dataset.plan);
+  pricingPage.scrollTo({ top:0, behavior:'smooth' });
+});
+
+/* =========================================================
+   11. 主页面卡片 → 打开对应子页面
+   ========================================================= */
+document.getElementById('worksGrid').addEventListener('click', e => {
+  const card = e.target.closest('[data-gallery]');
+  if (!card) return;
+  e.preventDefault();
+  openGallery(card.dataset.gallery);
+});
+
+document.getElementById('pricingGrid').addEventListener('click', e => {
+  const card = e.target.closest('[data-pricing]');
+  if (!card) return;
+  e.preventDefault();
+  openPricingPage(card.dataset.pricing);
+});
+
+document.getElementById('gearGrid').addEventListener('click', e => {
+  const card = e.target.closest('[data-gear]');
+  if (!card) return;
+  e.preventDefault();
+  openGearPage(card.dataset.gear);
+});
+
+/* =========================================================
+   12. 顶部搜索
+   ========================================================= */
+const searchInput = document.getElementById('searchInput');
+const clearBtn    = document.getElementById('clearBtn');
+const searchPanel = document.getElementById('searchPanel');
+const searchbar   = document.querySelector('.searchbar');
+
+const allCards = Array.from(document.querySelectorAll('.section .card'));
+let matchesCache = [];
+
+function escapeHTML(s){
+  return String(s).replace(/[&<>"']/g, m => (
+    { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[m]
+  ));
+}
+function cardText(card){
+  return (card.dataset.search || card.textContent).toLowerCase();
+}
+
+function renderPanel(q){
+  if (!matchesCache.length){
+    searchPanel.innerHTML = `
+      <div class="search-empty">
+        <span class="se-title">未找到与「${escapeHTML(q)}」相关的内容</span>
+        <span class="se-sub">可尝试「写真」「婚纱」「胶片」「CCD」「活动」等关键词</span>
+      </div>`;
+    searchPanel.classList.add('show');
+    return;
+  }
+
+  const head = `<div class="search-head">找到 ${matchesCache.length} 条结果</div>`;
+
+  const items = matchesCache.slice(0, 8).map((m, i) => {
+    if (m.type === 'card'){
+      const sec   = m.el.closest('.section');
+      const title = m.el.querySelector('h3')?.textContent || '';
+      const desc  = m.el.querySelector('p')?.textContent || '';
+      return `<button class="search-item" type="button" data-idx="${i}" role="option">
+        <span class="si-body">
+          <span class="si-title">${escapeHTML(title)}</span>
+          <span class="si-desc">${escapeHTML(desc)}</span>
+        </span>
+        <span class="si-tag">${escapeHTML(sec.dataset.name || '')}</span>
+      </button>`;
+    }
+    if (m.type === 'work'){
+      const g = m.data;
+      return `<button class="search-item" type="button" data-idx="${i}" role="option">
+        <span class="si-body">
+          <span class="si-title">${escapeHTML(g.title)}</span>
+          <span class="si-desc">${escapeHTML(g.meta)}</span>
+        </span>
+        <span class="si-tag">作品集 · ${escapeHTML(CAT_NAMES[g.cat])}</span>
+      </button>`;
+    }
+    if (m.type === 'device'){
+      const { cat, item } = m.data;
+      return `<button class="search-item" type="button" data-idx="${i}" role="option">
+        <span class="si-body">
+          <span class="si-title">${escapeHTML(item.name)}</span>
+          <span class="si-desc">${escapeHTML(item.sub)}</span>
+        </span>
+        <span class="si-tag">${escapeHTML(cat.title)}</span>
+      </button>`;
+    }
+    if (m.type === 'plan'){
+      const p = m.data;
+      return `<button class="search-item" type="button" data-idx="${i}" role="option">
+        <span class="si-body">
+          <span class="si-title">${escapeHTML(p.title)}</span>
+          <span class="si-desc">${escapeHTML(p.summary)}</span>
+        </span>
+        <span class="si-tag">收费 · ¥${escapeHTML(p.price)}</span>
+      </button>`;
+    }
+    return '';
+  }).join('');
+
+  const more = matchesCache.length > 8
+    ? `<div class="search-more">仅显示前 8 条，继续输入可缩小范围</div>` : '';
+
+  searchPanel.innerHTML = head + items + more;
+  searchPanel.classList.add('show');
+}
+
+function runSearch(){
+  const q = searchInput.value.trim().toLowerCase();
+  clearBtn.classList.toggle('show', q.length > 0);
+
+  if (!q){
+    resetSearch(false);
+    return;
+  }
+
+  matchesCache = [];
+
+  allCards.forEach(card => {
+    const hit = cardText(card).includes(q);
+    card.classList.toggle('is-hidden', !hit);
+    if (hit) matchesCache.push({ type:'card', el:card });
+  });
+
+  document.querySelectorAll('.section').forEach(sec => {
+    const grid = sec.querySelector('.grid');
+    if (!grid) return;
+    const visible = grid.querySelectorAll('.card:not(.is-hidden)').length;
+    const empty = sec.querySelector('.empty-state');
+    if (empty) empty.classList.toggle('show', visible === 0);
+  });
+
+  galleryData.forEach(g => {
+    const hay = (g.title + ' ' + g.meta + ' ' + CAT_NAMES[g.cat] + ' ' + (g.note || '')).toLowerCase();
+    if (hay.includes(q)) matchesCache.push({ type:'work', data:g });
+  });
+
+  gearCategories.forEach(cat => {
+    cat.items.forEach(item => {
+      const hay = (cat.title + ' ' + item.name + ' ' + item.sub + ' ' + item.badge + ' ' + item.desc).toLowerCase();
+      if (hay.includes(q)) matchesCache.push({ type:'device', data:{ cat, item } });
+    });
+  });
+
+  pricingPlans.forEach(p => {
+    const hay = (p.title + ' ' + p.summary + ' ' + p.tag + ' ' + p.suitable + ' ' + p.includes.join(' ')).toLowerCase();
+    if (hay.includes(q)) matchesCache.push({ type:'plan', data:p });
+  });
+
+  renderPanel(q);
+}
+
+function resetSearch(clearInput = true){
+  if (clearInput) searchInput.value = '';
+  clearBtn.classList.remove('show');
+  allCards.forEach(c => c.classList.remove('is-hidden'));
+  document.querySelectorAll('.empty-state').forEach(el => el.classList.remove('show'));
+  searchPanel.classList.remove('show');
+  searchPanel.innerHTML = '';
+  matchesCache = [];
+}
+
+searchInput.addEventListener('input', runSearch);
+searchInput.addEventListener('focus', () => {
+  if (searchInput.value.trim() && matchesCache.length){
+    searchPanel.classList.add('show');
+  }
+});
+clearBtn.addEventListener('click', () => {
+  resetSearch(true);
+  searchInput.focus();
+});
+
+searchPanel.addEventListener('click', e => {
+  const btn = e.target.closest('.search-item');
+  if (!btn) return;
+  const m = matchesCache[+btn.dataset.idx];
+  if (!m) return;
+
+  if (m.type === 'card'){
+    const card = m.el;
+    const galleryCat = card.dataset.gallery;
+    const gearCat    = card.dataset.gear;
+    const pricingId  = card.dataset.pricing;
+    resetSearch(true);
+
+    if (galleryCat)      openGallery(galleryCat);
+    else if (gearCat)    openGearPage(gearCat);
+    else if (pricingId)  openPricingPage(pricingId);
+    else {
+      setTimeout(() => {
+        card.scrollIntoView({ behavior:'smooth', block:'center' });
+        card.classList.add('flash');
+        setTimeout(() => card.classList.remove('flash'), 1500);
+      }, 80);
+    }
+    return;
+  }
+
+  if (m.type === 'work'){
+    const g = m.data;
+    resetSearch(true);
+    openGallery('all');
+    setTimeout(() => {
+      const el = Array.from(subGrid.querySelectorAll('.work'))
+        .find(w => w.dataset.title === g.title);
+      if (el){
+        el.scrollIntoView({ behavior:'smooth', block:'center' });
+        el.classList.add('flash');
+        setTimeout(() => el.classList.remove('flash'), 1500);
+      }
+    }, 420);
+    return;
+  }
+
+  if (m.type === 'device'){
+    const { cat, item } = m.data;
+    resetSearch(true);
+    openGearPage(cat.id);
+    setTimeout(() => {
+      const el = Array.from(gearCatList.querySelectorAll('.device-card'))
+        .find(c => c.dataset.cat === cat.id &&
+                   cat.items[+c.dataset.idx].name === item.name);
+      if (el){
+        el.scrollIntoView({ behavior:'smooth', block:'center' });
+        el.classList.add('flash');
+        setTimeout(() => el.classList.remove('flash'), 1500);
+      }
+    }, 520);
+    return;
+  }
+
+  if (m.type === 'plan'){
+    resetSearch(true);
+    openPricingPage(m.data.id);
+  }
+});
+
+document.addEventListener('click', e => {
+  if (!searchbar.contains(e.target)){
+    searchPanel.classList.remove('show');
+  }
+});
+
+/* =========================================================
+   13. 键盘快捷键
+   ========================================================= */
+document.addEventListener('keydown', e => {
+  const topLayer = layerStack[layerStack.length - 1];
+
+  if (topLayer === workDetail && sliderState.total){
+    if (e.key === 'ArrowLeft'){ e.preventDefault(); prevSlide(); return; }
+    if (e.key === 'ArrowRight'){ e.preventDefault(); nextSlide(); return; }
+  }
+
+  if (e.key === 'Escape'){
+    if (searchPanel.classList.contains('show')){
+      searchPanel.classList.remove('show');
+      return;
+    }
+    if (layerStack.length){
+      closeTopLayer();
+      return;
+    }
+    closeSidebar();
+    return;
+  }
+
+  const tag = (e.target.tagName || '').toLowerCase();
+  const typing = tag === 'input' || tag === 'textarea' || e.target.isContentEditable;
+  if (e.key === '/' && !typing && !layerStack.length){
+    e.preventDefault();
+    searchInput.focus();
+    searchInput.select();
+  }
+});
+
+/* =========================================================
+   14. 初始化
+   ========================================================= */
+renderTabs();
+renderGallery('all');
+renderPricing('basic');
+</script>
+</body>
+</html>
